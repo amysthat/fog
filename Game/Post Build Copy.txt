@@ -1,0 +1,2 @@
+﻿call del "$(SolutionDir)Application\bin\$(Configuration)\net7.0\data\$(AssemblyName).dll"
+call copy "$(ProjectDir)$(OutDir)$(AssemblyName).dll" "$(SolutionDir)Application\bin\$(Configuration)\net7.0\data\"

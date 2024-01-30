@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\fog\fog.csproj" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="call del &quot;$(SolutionDir)Application\bin\$(Configuration)\net7.0\data\$(AssemblyName).dll&quot;&#xD;&#xA;call copy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).dll&quot; &quot;$(SolutionDir)Application\bin\$(Configuration)\net7.0\data\&quot;" />
+  </Target>
+
+</Project>

@@ -1,0 +1,2 @@
+﻿
+fog.Entry.Run();
