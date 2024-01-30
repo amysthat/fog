@@ -16,6 +16,7 @@ fog currently provides:
  - Shader support
  - Cross-platform support
  - Particle support
+ - Headless Mode
 
 ### Branch Details
 The `main` branch will always have finished, ready to use code.
