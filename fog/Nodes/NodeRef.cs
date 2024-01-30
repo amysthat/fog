@@ -10,6 +10,7 @@ namespace fog.Nodes
         public NodeRef(Node node) => InstanceID = node.InstanceID;
 
         public Node Get() => World.GetNode(InstanceID);
+        public T Get<T>() where T : Node => (T) Get();
 
         public static implicit operator Node(NodeRef nodeRef) => nodeRef.Get();
     }

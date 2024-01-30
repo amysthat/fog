@@ -66,6 +66,8 @@ namespace fog
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TotalTime = (float)gameTime.TotalGameTime.TotalSeconds;
 
+            Input.Update();
+
             World.Update();
 
             base.Update(gameTime);

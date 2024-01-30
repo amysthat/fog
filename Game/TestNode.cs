@@ -10,17 +10,23 @@ namespace Game
     {
         public override void OnUpdate()
         {
-            Position = Input.Mouse.ScreenPosition.ToVector2();
-
             if (Input.Mouse.IsMouseDown(MouseButton.Left))
+                Position = Input.Mouse.ScreenPosition.ToVector2();
+
+            if (Input.Keyboard.IsKeyIncoming(Keys.Space))
             {
                 ((SpriteNode)Children[0].Get()).IsHorizontallyFlipped = !((SpriteNode)Children[0].Get()).IsHorizontallyFlipped;
             }
 
-            //if (Input.Keyboard.IsKeyDown(Keys.F11))
-            //{
-            //    ProjectSettings.Active.Resolution.Fullscreen = !ProjectSettings.Active.Resolution.Fullscreen;
-            //}
+            if (Input.Keyboard.IsKeyIncoming(Keys.F11))
+            {
+                ProjectSettings.Active.Resolution = new Resolution
+                {
+                    Width = ProjectSettings.Active.Resolution.Width,
+                    Height = ProjectSettings.Active.Resolution.Height,
+                    Fullscreen = !ProjectSettings.Active.Resolution.Fullscreen,
+                };
+            }
         }
 
         private static Vector2 TextOffset = new Vector2(15, 15);

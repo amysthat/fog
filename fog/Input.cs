@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using _Keyboard = Microsoft.Xna.Framework.Input.Keyboard;
 
 namespace fog
@@ -10,12 +12,43 @@ namespace fog
     /// </summary>
     public static class Input
     {
-        /// <summary>
-        /// Unfinished.
-        /// </summary>
+        internal static void Update()
+        {
+            Keyboard.Update();
+        }
+
         public static class Keyboard
         {
-            public static bool IsKeyDown(Keys key) => _Keyboard.GetState().IsKeyDown(key);
+            private static Keys[] prev_keys = new Keys[0];
+            private static Keys[] keys = new Keys[0];
+
+            private static List<Keys> incomingKeys = new();
+            private static List<Keys> outgoingKeys = new();
+
+            internal static void Update()
+            {
+                prev_keys = keys;
+                keys = _Keyboard.GetState().GetPressedKeys();
+
+                incomingKeys.Clear();
+                outgoingKeys.Clear();
+
+                foreach (var key in keys)
+                {
+                    if (!prev_keys.Contains(key))
+                        incomingKeys.Add(key);
+                }
+
+                foreach (var key in prev_keys)
+                {
+                    if (!keys.Contains(key))
+                        outgoingKeys.Add(key);
+                }
+            }
+
+            public static bool IsKeyIncoming(Keys key) => incomingKeys.Contains(key);
+            public static bool IsKeyStaying(Keys key) => keys.Contains(key);
+            public static bool IsKeyOutgoing(Keys key) => outgoingKeys.Contains(key);
         }
 
         /// <summary>
