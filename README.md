@@ -19,6 +19,6 @@ fog currently provides:
  - Headless Mode
 
 ### Branch Details
-The `main` branch will always have finished, ready to use code.
-If you want to see what I'm working on currently, check the `dev` branch out.
+The [`main`](https://github.com/amysthat/fog) branch will always have finished, ready to use code.
+If you want to see what I'm working on currently, check the [`dev`](https://github.com/amysthat/fog/tree/dev) branch out.
 > Well, that is currently not the case as I haven't released a build yet. The `main` branch currently doesn't have a proper build.
