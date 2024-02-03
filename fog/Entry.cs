@@ -13,7 +13,7 @@ namespace fog
             try
             {
 #endif
-            using var game = new fog();
+            using var game = new fogEngine();
             game.Run();
 #if RELEASE
             }

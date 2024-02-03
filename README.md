@@ -6,17 +6,24 @@ fog currently provides:
  - Node system
  - Asset pipeline & Serialization
  - Text & texture rendering
- - A simple (and unfinsihed, currently working on it) input system.
+ - An input system
  - Runtime user assembly loading
 
 ## Planned Features
  - Sprite support
  - A more powerful input system
- - Editor
+ - Editor*
  - Shader support
- - Cross-platform support
+ - Cross-platform support*
  - Particle support
- - Headless Mode
+ - Collision support
+ - Headless Mode*
+
+> I'm currently considering from switching from MonoGame to OpenTK. However, I want to implement the ones without the asteriks before commiting into such acts. The reason I'm considering is because of the Editor, as I have currently no idea how to implement it using MonoGame.
+> > Well, this will also require ImGuiNET it seems. We'll cross that bridge once we get to it.
+
+#### Considered Features for Much, Much Later
+ - 2D lighting support
 
 ### Branch Details
 The [`main`](https://github.com/amysthat/fog) branch will always have finished, ready to use code.

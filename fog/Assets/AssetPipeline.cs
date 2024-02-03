@@ -56,7 +56,7 @@ namespace fog.Assets
                         break;
                     case ".png":
                         var stream = new MemoryStream(rawData[fileNameNoExtension]);
-                        var texture = Texture2D.FromStream(fog.Instance.GraphicsDevice, stream);
+                        var texture = Texture2D.FromStream(fogEngine.Instance.GraphicsDevice, stream);
                         stream.Dispose();
                         parsedData.Add(fileNameNoExtension, texture);
                         break;

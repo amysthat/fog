@@ -60,15 +60,15 @@ namespace fog
                 return;
 
             // Resolution
-            fog.Instance.GraphicsDeviceManager.PreferredBackBufferWidth = Resolution.Width;
-            fog.Instance.GraphicsDeviceManager.PreferredBackBufferHeight = Resolution.Height;
-            fog.Instance.GraphicsDeviceManager.IsFullScreen = Resolution.Fullscreen;
-            fog.Instance.GraphicsDeviceManager.ApplyChanges();
+            fogEngine.Instance.GraphicsDeviceManager.PreferredBackBufferWidth = Resolution.Width;
+            fogEngine.Instance.GraphicsDeviceManager.PreferredBackBufferHeight = Resolution.Height;
+            fogEngine.Instance.GraphicsDeviceManager.IsFullScreen = Resolution.Fullscreen;
+            fogEngine.Instance.GraphicsDeviceManager.ApplyChanges();
 
             Logging.Info(nameof(ProjectSettings), $"Resolution set to: {Resolution.Width}x{Resolution.Height}:{Resolution.Fullscreen}, with aspect ratio of: {Resolution.AspectRatio}");
 
             // Title
-            fog.Instance.Window.Title = Title;
+            fogEngine.Instance.Window.Title = Title;
 
             Logging.Info(nameof(ProjectSettings), $"Title set to: {Title}");
         }

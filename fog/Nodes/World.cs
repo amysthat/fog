@@ -118,5 +118,26 @@ namespace fog.Nodes
                 node.OnDraw();
             }
         }
+
+        internal static void ClearAllNodes()
+        {
+            int count = 0;
+            foreach (var node in Nodes.Values)
+            {
+                try
+                {
+                    RemoveNode(node);
+                }
+                catch(Exception ex)
+                {
+                    Logging.Error(nameof(World), $"Node {node.InstanceID} threw an error whilst clearing all nodes: {ex}");
+                    if (BaseHierarchy.Contains(node)) BaseHierarchy.Remove(node);
+                    if (Nodes.ContainsKey(node.InstanceID)) Nodes.Remove(node.InstanceID);
+                }
+                count++;
+            }
+
+            Logging.Info(nameof(World), $"Cleared all {count} nodes.");
+        }
     }
 }

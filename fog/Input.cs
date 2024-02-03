@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Keyboard = Microsoft.Xna.Framework.Input.Keyboard;
+using _Mouse = Microsoft.Xna.Framework.Input.Mouse;
 
 namespace fog
 {
@@ -15,6 +16,7 @@ namespace fog
         internal static void Update()
         {
             Keyboard.Update();
+            Mouse.Update();
         }
 
         public static class Keyboard
@@ -51,54 +53,51 @@ namespace fog
             public static bool IsKeyOutgoing(Keys key) => outgoingKeys.Contains(key);
         }
 
-        /// <summary>
-        /// Unfinished.
-        /// </summary>
         public static class Mouse
         {
-            public static bool IsMouseDown(MouseButton button)
-            {
-                MouseState state = Microsoft.Xna.Framework.Input.Mouse.GetState();
+            private static MouseState prev_state;
+            private static MouseState state;
 
-                switch (button)
-                {
-                    case MouseButton.Left:
-                        return state.LeftButton == ButtonState.Pressed;
-                    case MouseButton.Right:
-                        return state.RightButton == ButtonState.Pressed;
-                    case MouseButton.Middle:
-                        return state.MiddleButton == ButtonState.Pressed;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(button));
-                }
+            internal static void Update()
+            {
+                prev_state = state;
+                state = _Mouse.GetState();
             }
 
-            public static bool IsMouseUp(MouseButton button)
+            public static bool IsMouseButtonIncoming(MouseButton button)
             {
-                MouseState state = Microsoft.Xna.Framework.Input.Mouse.GetState();
-
-                switch (button)
+                return button switch
                 {
-                    case MouseButton.Left:
-                        return state.LeftButton == ButtonState.Released;
-                    case MouseButton.Right:
-                        return state.RightButton == ButtonState.Released;
-                    case MouseButton.Middle:
-                        return state.MiddleButton == ButtonState.Released;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(button));
-                }
+                    MouseButton.Left => state.LeftButton == ButtonState.Pressed && prev_state.LeftButton == ButtonState.Released,
+                    MouseButton.Middle => state.MiddleButton == ButtonState.Pressed && prev_state.LeftButton == ButtonState.Released,
+                    MouseButton.Right => state.RightButton == ButtonState.Pressed && prev_state.LeftButton == ButtonState.Released,
+                    _ => throw new InvalidProgramException(),
+                };
             }
 
-            public static Point ScreenPosition
+            public static bool IsMouseButtonOutcoming(MouseButton button)
             {
-                get
+                return button switch
                 {
-                    MouseState state = Microsoft.Xna.Framework.Input.Mouse.GetState();
-
-                    return new Point(state.X, state.Y);
-                }
+                    MouseButton.Left => state.LeftButton == ButtonState.Released && prev_state.LeftButton == ButtonState.Pressed,
+                    MouseButton.Middle => state.MiddleButton == ButtonState.Released && prev_state.LeftButton == ButtonState.Pressed,
+                    MouseButton.Right => state.RightButton == ButtonState.Released && prev_state.LeftButton == ButtonState.Pressed,
+                    _ => throw new InvalidProgramException(),
+                };
             }
+
+            public static bool IsMouseButtonStaying(MouseButton button)
+            {
+                return button switch
+                {
+                    MouseButton.Left => state.LeftButton == ButtonState.Pressed,
+                    MouseButton.Middle => state.MiddleButton == ButtonState.Pressed,
+                    MouseButton.Right => state.RightButton == ButtonState.Pressed,
+                    _ => throw new InvalidProgramException(),
+                };
+            }
+
+            public static Point Position => state.Position;
         }
     }
 

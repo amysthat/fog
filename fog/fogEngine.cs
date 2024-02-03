@@ -3,14 +3,15 @@ using fog.Nodes;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace fog
 {
 #pragma warning disable IDE1006 // Naming Styles
-    public class fog : Game
+    public class fogEngine : Game
 #pragma warning restore IDE1006 // Naming Styles
     {
-        internal static fog Instance { get; private set; }
+        internal static fogEngine Instance { get; private set; }
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -23,7 +24,7 @@ namespace fog
 
         public static FontSystem DefaultFont { get; private set; }
 
-        public fog()
+        public fogEngine()
         {
             if (Instance is not null)
             {
@@ -56,7 +57,7 @@ namespace fog
             RuntimeGraphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
 
             if (ProjectSettings.Active.StartupNode == "")
-                Logging.Error(nameof(fog), "Startup node not set!");
+                Logging.Error(nameof(fogEngine), "Startup node not set!");
             else
                 World.ImportNode(AssetPipeline.GetAsset<SerializedNode>(ProjectSettings.Active.StartupNode));
         }
@@ -82,6 +83,17 @@ namespace fog
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            Logging.Info("fog Engine", "Exit queued.");
+            World.ClearAllNodes();
+        }
+
+        public static void Quit()
+        {
+            Instance.Exit();
         }
     }
 }

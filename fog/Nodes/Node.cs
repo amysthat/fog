@@ -46,20 +46,22 @@ namespace fog.Nodes
 
         public void Reparent(NodeRef? node)
         {
-            if (Parent.HasValue)
-                World.BaseHierarchy.Remove(node.Value);
+            if (node.HasValue)
+            {
+                if (!Parent.HasValue)
+                    World.BaseHierarchy.Remove(this);
 
-            Parent?.Get().Children.Remove(new NodeRef(node.Value.InstanceID));
-            node.Value.Get().Children.Add(new NodeRef(InstanceID));
-            Parent = new NodeRef(node.Value.InstanceID);
+                node.Value.Get().Children.Add(this);
+                Parent = node.Value;
+            }
+            else
+            {
+                if (Parent is not null)
+                    Parent.Value.Get().Children.Remove(this);
 
-            if (!Parent.HasValue)
                 World.BaseHierarchy.Add(this);
-        }
-
-        public void Free()
-        {
-            World.RemoveNode(this);
+                Parent = null;
+            }
         }
 
         public virtual void OnEnterWorld() { }

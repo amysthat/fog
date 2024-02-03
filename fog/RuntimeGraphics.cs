@@ -22,7 +22,7 @@ namespace fog
         private static void DrawText(DrawStringEventArgs args)
         {
             Color color = args.Color.HasValue ? args.Color.Value : ProjectSettings.Active.DefaultTextColor;
-            spriteBatch.DrawString(fog.DefaultFont.GetFont(args.FontSize), args.Text, args.Position, color);
+            spriteBatch.DrawString(fogEngine.DefaultFont.GetFont(args.FontSize), args.Text, args.Position, color);
         }
 
         private static void DrawTexture(DrawTextureEventArgs args)
