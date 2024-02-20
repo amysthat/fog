@@ -41,6 +41,14 @@ namespace fog
 
         protected override void Initialize()
         {
+            if (Generator.ShouldGenerate())
+            {
+                Generator.Generate();
+                Logging.Success("Generated.");
+                Exit();
+                return;
+            }
+
             AssetPipeline.Initialize();
             ProjectSettings.Initialize();
             Assemblies.LoadPlayerAssembly(AssetPipeline.GetRaw(ProjectSettings.Active.PlayerAssembly));

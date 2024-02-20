@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using System.IO;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
+﻿using System.IO;
+using System.Text.Json;
 
 namespace fog.Assets
 {
@@ -9,33 +7,26 @@ namespace fog.Assets
     {
         internal static class Serialization
         {
-            private static ISerializer Serializer = new SerializerBuilder()
-                .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                .WithTagMapping("!vector2", typeof(Vector2))
-                .WithTagMapping("!color", typeof(Color))
-                .WithTagMapping("!assetref", typeof(AssetRef))
-                .WithTagMapping("!float", typeof(float))
-                .WithTagMapping("!bool", typeof(bool))
-                .Build();
+            public static readonly JsonSerializerOptions Options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            };
 
-            private static IDeserializer Deserializer = new DeserializerBuilder()
-                .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                .WithTagMapping("!vector2", typeof(Vector2))
-                .WithTagMapping("!color", typeof(Color))
-                .WithTagMapping("!assetref", typeof(AssetRef))
-                .WithTagMapping("!float", typeof(float))
-                .WithTagMapping("!bool", typeof(bool))
-                .Build();
+            public static void Serialize(object thing, string fileName)
+            {
+                var data = SerializeContent(thing);
+                File.WriteAllText(Path.Combine("data", fileName), data);
+            }
 
-            public static string SerializeContent(object graph) => Serializer.Serialize(graph);
+            public static string SerializeContent(object thing) => JsonSerializer.Serialize(thing, Options);
 
             public static T Deserialize<T>(string path)
             {
                 string content = File.ReadAllText(path);
-                return Deserializer.Deserialize<T>(content);
+                return DeserializeContent<T>(content);
             }
 
-            public static T DeserializeContent<T>(string content) => Deserializer.Deserialize<T>(content);
+            public static T DeserializeContent<T>(string content) => JsonSerializer.Deserialize<T>(content, Options);
         }
     }
 }

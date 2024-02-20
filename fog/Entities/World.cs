@@ -8,9 +8,12 @@ namespace fog.Nodes
     {
         private static List<Entity> Entities { get; set; } = new();
 
-        public static Entity Add(string name = "New Entity", Vector2 position = new Vector2())
+        public static Entity Add(string name = "New Entity", Vector2? position = null)
         {
-            var entity = new Entity(name, position);
+            if (position is null)
+                position = new Vector2(0, 0);
+
+            var entity = new Entity(name, position.Value);
             Entities.Add(entity);
             return entity;
         }
