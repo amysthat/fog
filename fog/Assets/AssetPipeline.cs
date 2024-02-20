@@ -43,10 +43,6 @@ namespace fog.Assets
                         var txtFile = TxtFile.FromBytes(rawData[fileNameNoExtension]);
                         parsedData.Add(fileNameNoExtension, txtFile);
                         break;
-                    case ".fgnode":
-                        var serializedNode = Serialization.Deserialize<SerializedNode>(file);
-                        parsedData.Add(fileNameNoExtension, serializedNode);
-                        break;
                     case ".ttf":
                         var fontSystem = new FontSystem();
                         fontSystem.AddFont(rawData[fileNameNoExtension]);

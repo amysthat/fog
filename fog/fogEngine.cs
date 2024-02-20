@@ -58,9 +58,15 @@ namespace fog
 
             if (ProjectSettings.Active.StartupNode == "")
                 Logging.Error(nameof(fogEngine), "Startup node not set!");
-            else
-                World.ImportNode(AssetPipeline.GetAsset<SerializedNode>(ProjectSettings.Active.StartupNode));
-        }
+            //else
+            //    World.ImportNode(AssetPipeline.GetAsset<SerializedNode>(ProjectSettings.Active.StartupNode));
+
+            var e = World.Add("Test Entity");
+            e.AddComponent<BuiltinComponents.SpriteComponent>();
+            e.AddComponent<test_c>();
+
+            Logging.Info(AssetPipeline.Serialization.SerializeContent(e));
+        } public class test_c : Entities.Component { }
 
         protected override void Update(GameTime gameTime)
         {
@@ -69,7 +75,7 @@ namespace fog
 
             Input.Update();
 
-            World.Update();
+            //World.Update();
 
             base.Update(gameTime);
         }
@@ -79,7 +85,7 @@ namespace fog
             GraphicsDevice.Clear(ProjectSettings.Active.ClearColor);
 
             _spriteBatch.Begin();
-            World.Draw();
+            //World.Draw();
             _spriteBatch.End();
 
             base.Draw(gameTime);
@@ -88,7 +94,7 @@ namespace fog
         protected override void OnExiting(object sender, EventArgs args)
         {
             Logging.Info("fog Engine", "Exit queued.");
-            World.ClearAllNodes();
+            World.DestroyAllEntities();
         }
 
         public static void Quit()

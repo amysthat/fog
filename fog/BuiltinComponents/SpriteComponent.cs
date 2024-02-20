@@ -1,11 +1,11 @@
 ﻿using fog.Assets;
-using fog.Nodes;
+using fog.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace fog.BuiltinNodes
+namespace fog.BuiltinComponents
 {
-    public class SpriteNode : Node
+    public class SpriteComponent : Component
     {
         public AssetRef Sprite { get; set; }
         public float Scale { get; set; } = 1f;
@@ -16,7 +16,7 @@ namespace fog.BuiltinNodes
         {
             if (Sprite.IsPointing())
             {
-                Graphics.DrawTexture(Sprite.Get<Texture2D>(), GlobalPosition, tint: Tint, scale: Scale, isFlipped: IsHorizontallyFlipped, rotation: 0);
+                Graphics.DrawTexture(Sprite.Get<Texture2D>(), entity.Position, tint: Tint, scale: Scale, isFlipped: IsHorizontallyFlipped, rotation: 0);
             }
         }
     }

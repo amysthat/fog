@@ -1,21 +1,21 @@
 ﻿using fog;
-using fog.BuiltinNodes;
-using fog.Nodes;
+using fog.BuiltinComponents;
+using fog.Entities;
 using Microsoft.Xna.Framework.Input;
 using System.Numerics;
 
 namespace Game
 {
-    public class TestNode : Node
+    public class TestComponent : Component
     {
         public override void OnUpdate()
         {
             if (Input.Mouse.IsMouseButtonStaying(MouseButton.Left))
-                Position = Input.Mouse.Position.ToVector2();
+                entity.Position = Input.Mouse.Position.ToVector2();
 
             if (Input.Keyboard.IsKeyIncoming(Keys.Space))
             {
-                Children[0].Get<SpriteNode>().IsHorizontallyFlipped = !Children[0].Get<SpriteNode>().IsHorizontallyFlipped;
+                entity.GetComponent<SpriteComponent>().IsHorizontallyFlipped = !entity.GetComponent<SpriteComponent>().IsHorizontallyFlipped;
             }
 
             if (Input.Keyboard.IsKeyIncoming(Keys.Escape))
