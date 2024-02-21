@@ -16,7 +16,7 @@ namespace fog.BuiltinComponents
         {
             if (Sprite.IsPointing())
             {
-                Graphics.DrawTexture(Sprite.Get<Texture2D>(), entity.Position, tint: Tint, scale: Scale, isFlipped: IsHorizontallyFlipped, rotation: 0);
+                Graphics.DrawTexture(Sprite.Get<Texture2D>(), entity.Get().Position, tint: Tint, scale: Scale, isFlipped: IsHorizontallyFlipped, rotation: 0);
             }
         }
     }

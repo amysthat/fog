@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using fog.Entities;
+using System.IO;
 using System.Text.Json;
 
 namespace fog.Assets
@@ -7,10 +8,16 @@ namespace fog.Assets
     {
         internal static class Serialization
         {
-            public static readonly JsonSerializerOptions Options = new JsonSerializerOptions
+            public static JsonSerializerOptions GetOptions()
             {
-                WriteIndented = true,
-            };
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                };
+                options.Converters.Add(new ComponentListConverter());
+
+                return options;
+            }
 
             public static void Serialize(object thing, string fileName)
             {
@@ -18,7 +25,16 @@ namespace fog.Assets
                 File.WriteAllText(Path.Combine("data", fileName), data);
             }
 
-            public static string SerializeContent(object thing) => JsonSerializer.Serialize(thing, Options);
+            public static string SerializeContent(object thing)
+            {
+                var content = JsonSerializer.Serialize(thing, GetOptions());
+
+                var document = JsonDocument.Parse(content);
+
+                content = JsonSerializer.Serialize(document.RootElement, GetOptions());
+
+                return content;
+            }
 
             public static T Deserialize<T>(string path)
             {
@@ -26,7 +42,7 @@ namespace fog.Assets
                 return DeserializeContent<T>(content);
             }
 
-            public static T DeserializeContent<T>(string content) => JsonSerializer.Deserialize<T>(content, Options);
+            public static T DeserializeContent<T>(string content) => JsonSerializer.Deserialize<T>(content, GetOptions());
         }
     }
 }

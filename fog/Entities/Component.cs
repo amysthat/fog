@@ -1,14 +1,11 @@
-﻿using YamlDotNet.Serialization;
+﻿namespace fog.Entities;
 
-namespace fog.Entities
+public class Component
 {
-    public class Component
-    {
-        [YamlIgnore] public Entity entity { get; internal set; }
+    public Reference<Entity> entity { get; internal set; }
 
-        public virtual void OnStart() { }
-        public virtual void OnUpdate() { }
-        public virtual void OnDraw() { }
-        public virtual void OnDestroy() { }
-    }
+    public virtual void OnStart() { }
+    public virtual void OnUpdate() { }
+    public virtual void OnDraw() { }
+    public virtual void OnDestroy() { }
 }

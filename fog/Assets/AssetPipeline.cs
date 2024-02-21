@@ -1,4 +1,5 @@
-﻿using fog.Nodes;
+﻿using fog.Entities;
+using fog.Nodes;
 using FontStashSharp;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -55,6 +56,9 @@ namespace fog.Assets
                         var texture = Texture2D.FromStream(fogEngine.Instance.GraphicsDevice, stream);
                         stream.Dispose();
                         parsedData.Add(fileNameNoExtension, texture);
+                        break;
+                    case ".fgentity":
+                        parsedData.Add(fileNameNoExtension, Serialization.Deserialize<Entity>(file));
                         break;
                     default:
                         Logging.Warning(nameof(AssetPipeline), $"Unable to parse \"{fileName}\", unknown file type!");

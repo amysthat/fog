@@ -41,6 +41,8 @@ namespace fog
 
         protected override void Initialize()
         {
+            Memory.Initialize();
+
             if (Generator.ShouldGenerate())
             {
                 Generator.Generate();
