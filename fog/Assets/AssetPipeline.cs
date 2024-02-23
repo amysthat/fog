@@ -1,5 +1,4 @@
 ﻿using fog.Entities;
-using fog.Nodes;
 using FontStashSharp;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -29,14 +28,14 @@ namespace fog.Assets
                 {
                     rawData.Add(fileName, File.ReadAllBytes(file));
                     parsedData.Add("fgproject", Serialization.Deserialize<ProjectSettings>(file));
-                    Logging.Info(nameof(AssetPipeline), "Added .fgproject asset.");
+                    Logging.Log("Added .fgproject asset.");
                     continue;
                 }
 
                 var fileNameNoExtension = Path.GetFileNameWithoutExtension(file);
                 rawData.Add(fileNameNoExtension, File.ReadAllBytes(file));
 
-                Logging.Info(nameof(AssetPipeline), $"Parsing: {fileName}");
+                Logging.Log($"Parsing: {fileName}");
 
                 switch (Path.GetExtension(file))
                 {
@@ -61,7 +60,7 @@ namespace fog.Assets
                         parsedData.Add(fileNameNoExtension, Serialization.Deserialize<Entity>(file));
                         break;
                     default:
-                        Logging.Warning(nameof(AssetPipeline), $"Unable to parse \"{fileName}\", unknown file type!");
+                        Logging.Warning($"Unable to parse \"{fileName}\", unknown file type!");
                         unparsedFileCount++;
                         break;
                 }
@@ -70,7 +69,7 @@ namespace fog.Assets
                 fileCount++;
             }
 
-            Logging.Info(nameof(AssetPipeline), $"Initialized. (parsed file count: {fileCount - unparsedFileCount}, unparsed file count: {unparsedFileCount}, total size: {totalSize / 1000} kilobyte(s))");
+            Logging.Log($"Initialized. (parsed file count: {fileCount - unparsedFileCount}, unparsed file count: {unparsedFileCount}, total size: {totalSize / 1000} kilobyte(s))");
         }
 
         public static string GetName(object asset)

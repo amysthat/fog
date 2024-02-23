@@ -16,7 +16,7 @@ namespace fog
             DrawStringEvent += DrawText;
             DrawTextureEvent += DrawTexture;
 
-            Logging.Info(nameof(RuntimeGraphics), "Initialized.");
+            Logging.Log("Initialized.");
         }
 
         private static void DrawText(DrawStringEventArgs args)

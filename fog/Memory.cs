@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using fog.Assets;
 
 namespace fog;
 
@@ -11,13 +12,15 @@ public static class Memory
     {
         objects = new Dictionary<Guid, Object>();
 
-        Logging.Info(nameof(Memory), "Initialized.");
+        Logging.Log("Initialized.");
     }
 
     internal static void Add(Object @object)
     {
-        objects.Add(@object.GUID, @object);
-        Logging.Info($"Added object {@object.GUID}");
+        if (objects.TryAdd(@object.GUID, @object))
+        {
+            Logging.Log($"Added object {@object.GUID}");
+        }
     }
 
     public static void Allocate(Object @object)
@@ -34,17 +37,27 @@ public static class Memory
         return @object;
     }
 
-    public static void Free(Guid guid)
+    public static void Remove(Guid guid)
     {
         objects.Remove(guid);
     }
 
-    public static void Free(Object @object)
+    public static void Remove(Object @object)
     {
-        Free(@object.GUID);
+        Remove(@object.GUID);
     }
 
     public static Object Get(Guid guid) => objects[guid];
 
     public static T Get<T>(Guid guid) where T : Object => (T) objects[guid];
+
+    public static T Clone<T>(T @object) where T : Object
+    {
+        var content = AssetPipeline.Serialization.SerializeContent(@object);
+        var newObject = AssetPipeline.Serialization.DeserializeContent<T>(content);
+        newObject.UpdateGUIDs(Guid.NewGuid());
+
+        Logging.Log($"Cloning {@object.GUID} -> {newObject.GUID} ({typeof(T).Name})");
+        return newObject;
+    }
 }

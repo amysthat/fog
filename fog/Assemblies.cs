@@ -13,7 +13,7 @@ namespace fog
             try
             {
                 Player = Assembly.Load(content);
-                Logging.Success(nameof(Assemblies), $"Successfully loaded player assembly: " + Player.GetName().Name);
+                Logging.Log($"Successfully loaded player assembly: " + Player.GetName().Name);
             }
             catch
             {

@@ -45,13 +45,13 @@ namespace fog
         {
             if (Active == this)
             {
-                Logging.Warning(nameof(ProjectSettings), "MarkActive() called more than once.");
+                Logging.Warning("MarkActive() called more than once.");
                 return;
             }
 
             Active = this;
             Apply();
-            Logging.Info(nameof(ProjectSettings), "Initialized.");
+            Logging.Log("Initialized.");
         }
 
         public void Apply()
@@ -65,12 +65,12 @@ namespace fog
             fogEngine.Instance.GraphicsDeviceManager.IsFullScreen = Resolution.Fullscreen;
             fogEngine.Instance.GraphicsDeviceManager.ApplyChanges();
 
-            Logging.Info(nameof(ProjectSettings), $"Resolution set to: {Resolution.Width}x{Resolution.Height}:{Resolution.Fullscreen}, with aspect ratio of: {Resolution.AspectRatio}");
+            Logging.Log($"Resolution set to: {Resolution.Width}x{Resolution.Height}:{Resolution.Fullscreen}, with aspect ratio of: {Resolution.AspectRatio}");
 
             // Title
             fogEngine.Instance.Window.Title = Title;
 
-            Logging.Info(nameof(ProjectSettings), $"Title set to: {Title}");
+            Logging.Log($"Title set to: {Title}");
         }
 
         public ProjectSettings() { }

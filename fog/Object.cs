@@ -1,17 +1,25 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace fog;
 
-public class Object
+/// <summary>
+/// Be sure to call <see cref="Memory.Add(Object)"/> if you instantiate manually.
+/// </summary>
+public class Object : IJsonOnDeserialized
 {
-    public Guid GUID { get; internal set; }
+    public Guid GUID { get; set; }
 
-    /// <summary>
-    /// Try using <see cref="Memory.Allocate{T}()"/> or <see cref="Memory.Allocate(Object)"/> instead.
-    /// </summary>
-    public Object(bool allocate = true)
+    public virtual void UpdateGUIDs(Guid newGuid)
     {
-        if (allocate)
-            Memory.Allocate(this);
+        Memory.Remove(this);
+        GUID = newGuid;
+    }
+
+    public virtual void OnDeserialized()
+    {
+        Logging.Debug($"Object deserialized. GUID: " + GUID);
+
+        Memory.Add(this);
     }
 }

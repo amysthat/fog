@@ -1,8 +1,10 @@
-﻿namespace fog.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace fog.Entities;
 
 public class Component
 {
-    public Reference<Entity> entity { get; internal set; }
+    [JsonIgnore] public Reference<Entity> entity { get; internal set; }
 
     public virtual void OnStart() { }
     public virtual void OnUpdate() { }

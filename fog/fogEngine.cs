@@ -1,5 +1,5 @@
 ﻿using fog.Assets;
-using fog.Nodes;
+using fog.Entities;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,7 +46,7 @@ namespace fog
             if (Generator.ShouldGenerate())
             {
                 Generator.Generate();
-                Logging.Success("Generated.");
+                Logging.Log("Generated.");
                 Exit();
                 return;
             }
@@ -67,16 +67,10 @@ namespace fog
             RuntimeGraphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
 
             if (ProjectSettings.Active.StartupNode == "")
-                Logging.Error(nameof(fogEngine), "Startup node not set!");
-            //else
-            //    World.ImportNode(AssetPipeline.GetAsset<SerializedNode>(ProjectSettings.Active.StartupNode));
-
-            var e = World.Add("Test Entity");
-            e.AddComponent<BuiltinComponents.SpriteComponent>();
-            e.AddComponent<test_c>();
-
-            Logging.Info(AssetPipeline.Serialization.SerializeContent(e));
-        } public class test_c : Entities.Component { }
+                Logging.Error("Startup node not set!");
+            else
+                World.Add(AssetPipeline.GetAsset<Entity>(ProjectSettings.Active.StartupNode));
+        }
 
         protected override void Update(GameTime gameTime)
         {
@@ -103,7 +97,7 @@ namespace fog
 
         protected override void OnExiting(object sender, EventArgs args)
         {
-            Logging.Info("fog Engine", "Exit queued.");
+            Logging.Log("Exiting...");
             World.DestroyAllEntities();
         }
 

@@ -41,8 +41,7 @@ public class ComponentListConverter : JsonConverter<ComponentList>
                 throw new TypeLoadException($"Can not find type \"{typeName}\".");
 
             // Get the value.
-            var componentData = reader.GetString();
-            var component = JsonSerializer.Deserialize(componentData, type);
+            var component = JsonSerializer.Deserialize(ref reader, type, AssetPipeline.Serialization.GetOptions());
 
             // Add to dictionary.
             componentList.Types.Add(typeName);
@@ -64,7 +63,7 @@ public class ComponentListConverter : JsonConverter<ComponentList>
             writer.WritePropertyName(typeName);
 
             var data = AssetPipeline.Serialization.SerializeContent(component);
-            writer.WriteStringValue(data);
+            writer.WriteRawValue(data);
         }
 
         writer.WriteEndObject();
