@@ -10,10 +10,7 @@ namespace fog
 
         public static void Error(string message)
         {
-            var method = new StackTrace().GetFrame(1)!.GetMethod();
-            var className = method!.ReflectedType!.Name;
-
-            var log = PrependMessageTime(className) + message;
+            var log = PrependMessageData() + message;
 
             History.AppendLine(log);
             Console.ForegroundColor = ConsoleColor.Red;
@@ -22,10 +19,7 @@ namespace fog
 
         public static void Warning(string message)
         {
-            var method = new StackTrace().GetFrame(1)!.GetMethod();
-            var className = method!.ReflectedType!.Name;
-
-            var log = PrependMessageTime(className) + message;
+            var log = PrependMessageData() + message;
 
             History.AppendLine(log);
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -34,10 +28,7 @@ namespace fog
 
         public static void Log(string message)
         {
-            var method = new StackTrace().GetFrame(1)!.GetMethod();
-            var className = method!.ReflectedType!.Name;
-
-            var log = PrependMessageTime(className) + message;
+            var log = PrependMessageData() + message;
 
             History.AppendLine(log);
             Console.ForegroundColor = ConsoleColor.White;
@@ -47,10 +38,7 @@ namespace fog
         internal static void Debug(string message)
         {
 #if DEBUG
-            var method = new StackTrace().GetFrame(1)!.GetMethod();
-            var className = method!.ReflectedType!.Name;
-
-            var log = PrependMessageTime(className) + message;
+            var log = PrependMessageData() + message;
 
             History.AppendLine(log);
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -58,9 +46,20 @@ namespace fog
 #endif
         }
 
-        private static string PrependMessageTime(string category)
+        private static string PrependMessageData()
         {
-            return $"[{DateTime.Now}] ({category}) ";
+            var method = new StackTrace().GetFrame(2)!.GetMethod();
+            var className = method!.ReflectedType!.Name;
+            var isPlayer = method.ReflectedType.Assembly == Assemblies.Player;
+
+            string data = $"[{DateTime.Now}] ";
+
+            if (isPlayer)
+                data += "[Player] ";
+
+            data += $"({className}) ";
+
+            return data;
         }
     }
 }

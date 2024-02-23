@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace fog;
+namespace fog.Memory;
 
 public class Reference<T> where T : Object
 {
     public Guid GUID { get; set; }
 
-    public T Get() => Memory.Get<T>(GUID);
+    public T Get() => MemoryManager.Get<T>(GUID);
 
     public static implicit operator T(Reference<T> reference) => reference.Get();
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
+using fog.Memory;
 
 namespace fog.Entities;
 
@@ -10,7 +10,7 @@ public static class World
 
     public static Entity Add(Entity entity)
     {
-        var copy = Memory.Clone(entity);
+        var copy = MemoryManager.Clone(entity);
         Entities.Add(copy);
         return copy;
     }
@@ -20,7 +20,7 @@ public static class World
         if (position is null)
             position = new Vector2(0, 0);
 
-        var entity = Memory.Allocate<Entity>();
+        var entity = MemoryManager.Allocate<Entity>();
         entity.Initialize(name, position.Value);
         Entities.Add(entity);
         return entity;
@@ -30,7 +30,23 @@ public static class World
     {
         entity.InvokeAllDestroyMethods();
         Entities.Remove(entity);
-        Memory.Remove(entity);
+        MemoryManager.Remove(entity);
+    }
+
+    internal static void Update()
+    {
+        foreach (var entity in Entities)
+        {
+            entity.InvokeAllUpdateMethods();
+        }
+    }
+
+    internal static void Draw()
+    {
+        foreach (var entity in Entities)
+        {
+            entity.InvokeAllDrawMethods();
+        }
     }
 
     internal static void DestroyAllEntities()

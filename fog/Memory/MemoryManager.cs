@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using fog.Assets;
 
-namespace fog;
+namespace fog.Memory;
 
-public static class Memory
+public static class MemoryManager
 {
     public static Dictionary<Guid, Object> objects;
 
@@ -31,7 +31,7 @@ public static class Memory
 
     public static T Allocate<T>() where T : Object
     {
-        T @object = (T) Activator.CreateInstance(typeof(T));
+        T @object = (T)Activator.CreateInstance(typeof(T));
         Allocate(@object);
 
         return @object;
@@ -49,7 +49,7 @@ public static class Memory
 
     public static Object Get(Guid guid) => objects[guid];
 
-    public static T Get<T>(Guid guid) where T : Object => (T) objects[guid];
+    public static T Get<T>(Guid guid) where T : Object => (T)objects[guid];
 
     public static T Clone<T>(T @object) where T : Object
     {

@@ -11,11 +11,11 @@ namespace Game
         public override void OnUpdate()
         {
             if (Input.Mouse.IsMouseButtonStaying(MouseButton.Left))
-                entity.Position = Input.Mouse.Position.ToVector2();
+                entity.Get().Position = Input.Mouse.Position.ToVector2();
 
             if (Input.Keyboard.IsKeyIncoming(Keys.Space))
             {
-                entity.GetComponent<SpriteComponent>().IsHorizontallyFlipped = !entity.GetComponent<SpriteComponent>().IsHorizontallyFlipped;
+                entity.Get().GetComponent<SpriteComponent>().IsHorizontallyFlipped = !entity.Get().GetComponent<SpriteComponent>().IsHorizontallyFlipped;
             }
 
             if (Input.Keyboard.IsKeyIncoming(Keys.Escape))

@@ -1,5 +1,6 @@
 ﻿using fog.Assets;
 using fog.Entities;
+using fog.Memory;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -41,7 +42,7 @@ namespace fog
 
         protected override void Initialize()
         {
-            Memory.Initialize();
+            MemoryManager.Initialize();
 
             if (Generator.ShouldGenerate())
             {
@@ -53,9 +54,13 @@ namespace fog
 
             AssetPipeline.Initialize();
             ProjectSettings.Initialize();
+
             Assemblies.LoadPlayerAssembly(AssetPipeline.GetRaw(ProjectSettings.Active.PlayerAssembly));
+            Assemblies.RetreiveAllInvocationCallbacks();
 
             DefaultFont = AssetPipeline.GetAsset<FontSystem>(ProjectSettings.Active.DefaultFont);
+
+            Assemblies.CallAllInitializationCallbacks();
 
             base.Initialize();
         }
@@ -66,10 +71,14 @@ namespace fog
 
             RuntimeGraphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
 
+            Assemblies.CallAllBeforeStartupEntityLoadCallbacks();
+
             if (ProjectSettings.Active.StartupNode == "")
                 Logging.Error("Startup node not set!");
             else
                 World.Add(AssetPipeline.GetAsset<Entity>(ProjectSettings.Active.StartupNode));
+
+            Assemblies.CallAllAfterStartupEntityLoadCallbacks();
         }
 
         protected override void Update(GameTime gameTime)
@@ -79,7 +88,7 @@ namespace fog
 
             Input.Update();
 
-            //World.Update();
+            World.Update();
 
             base.Update(gameTime);
         }
@@ -89,7 +98,7 @@ namespace fog
             GraphicsDevice.Clear(ProjectSettings.Active.ClearColor);
 
             _spriteBatch.Begin();
-            //World.Draw();
+            World.Draw();
             _spriteBatch.End();
 
             base.Draw(gameTime);

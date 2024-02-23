@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace fog;
+namespace fog.Memory;
 
 /// <summary>
-/// Be sure to call <see cref="Memory.Add(Object)"/> if you instantiate manually.
+/// Be sure to call <see cref="MemoryManager.Add(Object)"/> if you instantiate manually.
 /// </summary>
 public class Object : IJsonOnDeserialized
 {
@@ -12,7 +12,7 @@ public class Object : IJsonOnDeserialized
 
     public virtual void UpdateGUIDs(Guid newGuid)
     {
-        Memory.Remove(this);
+        MemoryManager.Remove(this);
         GUID = newGuid;
     }
 
@@ -20,6 +20,6 @@ public class Object : IJsonOnDeserialized
     {
         Logging.Debug($"Object deserialized. GUID: " + GUID);
 
-        Memory.Add(this);
+        MemoryManager.Add(this);
     }
 }

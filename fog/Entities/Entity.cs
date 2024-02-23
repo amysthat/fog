@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using fog.Memory;
+using Microsoft.Xna.Framework;
 using System;
+using Object = fog.Memory.Object;
 
 namespace fog.Entities;
 
@@ -29,13 +31,39 @@ public class Entity : Object
     public T AddComponent<T>() where T : Component
     {
         Components.AddComponent<T>(this);
+        var component = Components.GetComponent<T>();
+        component.OnStart();
 
-        return Components.GetComponent<T>();
+        return component;
     }
 
     public T GetComponent<T>() where T : Component => Components.GetComponent<T>();
 
     public bool HasComponent<T>() where T : Component => Components.HasComponent<T>();
+
+    internal void InvokeAllStartMethods()
+    {
+        foreach (var component in Components)
+        {
+            component.OnStart();
+        }
+    }
+
+    internal void InvokeAllUpdateMethods()
+    {
+        foreach (var component in Components)
+        {
+            component.OnUpdate();
+        }
+    }
+
+    internal void InvokeAllDrawMethods()
+    {
+        foreach (var component in Components)
+        {
+            component.OnDraw();
+        }
+    }
 
     internal void InvokeAllDestroyMethods()
     {

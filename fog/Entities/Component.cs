@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using fog.Memory;
 
 namespace fog.Entities;
 
