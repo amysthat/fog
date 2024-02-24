@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace fog
+namespace fog.Rendering
 {
     /// <summary>
     /// Combines both game and editor graphics calls into a single class.

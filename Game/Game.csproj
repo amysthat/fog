@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="call del &quot;$(SolutionDir)Application\bin\$(Configuration)\net7.0\data\$(AssemblyName).dll&quot;&#xD;&#xA;call copy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).dll&quot; &quot;$(SolutionDir)Application\bin\$(Configuration)\net7.0\data\&quot;" />
+    <Exec Command="call del &quot;$(SolutionDir)Application\bin\$(Configuration)\net7.0\data\$(AssemblyName).dll&quot;&#xD;&#xA;call copy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).dll&quot; &quot;$(SolutionDir)Application\bin\$(Configuration)\net7.0\data\&quot;&#xD;&#xA;" />
   </Target>
 
 </Project>

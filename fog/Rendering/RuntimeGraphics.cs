@@ -1,9 +1,9 @@
 ﻿using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static fog.Graphics;
+using static fog.Rendering.Graphics;
 
-namespace fog
+namespace fog.Rendering
 {
     internal static class RuntimeGraphics
     {
