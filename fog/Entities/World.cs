@@ -8,14 +8,14 @@ public static class World
 {
     private static List<Entity> Entities { get; set; } = new();
 
-    public static Entity Add(Entity entity)
+    public static Reference<Entity> Add(Entity entity)
     {
         var copy = MemoryManager.Clone(entity);
         Entities.Add(copy);
-        return copy;
+        return Reference<Entity>.From(copy);
     }
 
-    public static Entity Add(string name = "New Entity", Vector2? position = null)
+    public static Reference<Entity> Add(string name = "New Entity", Vector2? position = null)
     {
         if (position is null)
             position = new Vector2(0, 0);
@@ -23,7 +23,7 @@ public static class World
         var entity = MemoryManager.Allocate<Entity>();
         entity.Initialize(name, position.Value);
         Entities.Add(entity);
-        return entity;
+        return Reference<Entity>.From(entity);
     }
 
     public static void Destroy(Entity entity)

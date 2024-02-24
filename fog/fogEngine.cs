@@ -53,12 +53,11 @@ namespace fog
             }
 
             AssetPipeline.Initialize();
+            AssetPipeline.LoadProjectSettings();
             ProjectSettings.Initialize();
 
-            Assemblies.LoadPlayerAssembly(AssetPipeline.GetRaw(ProjectSettings.Active.PlayerAssembly));
+            Assemblies.LoadPlayerAssembly(ProjectSettings.Active.PlayerAssembly);
             Assemblies.RetreiveAllInvocationCallbacks();
-
-            DefaultFont = AssetPipeline.GetAsset<FontSystem>(ProjectSettings.Active.DefaultFont);
 
             Assemblies.CallAllInitializationCallbacks();
 
@@ -70,6 +69,10 @@ namespace fog
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             RuntimeGraphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
+
+            AssetPipeline.LoadAllContent();
+
+            DefaultFont = AssetPipeline.GetAsset<FontSystem>(ProjectSettings.Active.DefaultFont);
 
             Assemblies.CallAllBeforeStartupEntityLoadCallbacks();
 

@@ -1,8 +1,9 @@
 ﻿using fog;
 using fog.BuiltinComponents;
 using fog.Entities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Numerics;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Game
 {
@@ -32,6 +33,11 @@ namespace Game
                     Fullscreen = !ProjectSettings.Active.Resolution.Fullscreen,
                 };
             }
+
+            if (Input.Keyboard.IsKeyIncoming(Keys.Delete))
+            {
+                throw new Exception("User initiated crash.");
+            }
         }
 
         private static Vector2 TextOffset = new Vector2(15, 15);
@@ -39,8 +45,9 @@ namespace Game
         public override void OnDraw()
         {
             Graphics.DrawText("Test text, if you see this, hooraayy!", 20, TextOffset);
-            Graphics.DrawText("Delta time: " + fog.fogEngine.DeltaTime, 15, TextOffset + new Vector2(0, 20));
-            Graphics.DrawText("Total time: " + fog.fogEngine.TotalTime, 15, TextOffset + new Vector2(0, 35));
+            Graphics.DrawText("Delta time: " + fogEngine.DeltaTime, 15, TextOffset + new Vector2(0, 20));
+            Graphics.DrawText("Total time: " + fogEngine.TotalTime, 15, TextOffset + new Vector2(0, 35));
+            Graphics.DrawText("Press DEL to crash.", 15, TextOffset + new Vector2(0, 50), Color.Red);
         }
     }
 }

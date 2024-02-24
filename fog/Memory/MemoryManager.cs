@@ -17,10 +17,16 @@ public static class MemoryManager
 
     internal static void Add(Object @object)
     {
-        if (objects.TryAdd(@object.GUID, @object))
+        if (objects.ContainsKey(@object.GUID))
         {
-            Logging.Log($"Added object {@object.GUID}");
+            Logging.Warning($"Object ({@object.GetType()}, {@object.GUID}) has been already added.");
+            return;
         }
+
+        objects.Add(@object.GUID, @object);
+        Logging.Log($"Added object {@object.GUID}");
+
+        Logging.Debug($"Added: {@object.GUID} -> {objects[@object.GUID]}");
     }
 
     public static void Allocate(Object @object)
@@ -58,6 +64,8 @@ public static class MemoryManager
         newObject.UpdateGUIDs(Guid.NewGuid());
 
         Logging.Log($"Cloning {@object.GUID} -> {newObject.GUID} ({typeof(T).Name})");
+        Add(newObject);
+
         return newObject;
     }
 }

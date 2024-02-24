@@ -15,7 +15,20 @@ namespace fog.Assets
         {
             rawData.Clear();
             parsedData.Clear();
+        }
 
+        internal static void LoadProjectSettings()
+        {
+            var filePath = "data/.fgproject";
+
+            rawData.Add("fgproject", File.ReadAllBytes(filePath));
+            parsedData.Add("fgproject", Serialization.Deserialize<ProjectSettings>(filePath));
+
+            Logging.Log("Loaded project settings.");
+        }
+
+        internal static void LoadAllContent()
+        {
             var fileCount = 0;
             var totalSize = 0;
             var unparsedFileCount = 0;
@@ -25,12 +38,7 @@ namespace fog.Assets
                 var fileName = Path.GetFileName(file);
 
                 if (fileName == ".fgproject")
-                {
-                    rawData.Add(fileName, File.ReadAllBytes(file));
-                    parsedData.Add("fgproject", Serialization.Deserialize<ProjectSettings>(file));
-                    Logging.Log("Added .fgproject asset.");
                     continue;
-                }
 
                 var fileNameNoExtension = Path.GetFileNameWithoutExtension(file);
                 rawData.Add(fileNameNoExtension, File.ReadAllBytes(file));
@@ -87,6 +95,6 @@ namespace fog.Assets
         public static T GetAsset<T>(string name) => (T)GetAsset(name);
         public static byte[] GetRaw(string name) => rawData[Path.GetFileNameWithoutExtension(name)];
 
-        private static string PrependDataPath(string path) => Path.Combine("data", path);
+        internal static string PrependDataPath(string path) => Path.Combine("data", path);
     }
 }

@@ -15,13 +15,13 @@ namespace fog.Assets
             AssetPipeline.Serialization.Serialize(settings, ".fgproject");
 
             var entity = World.Add();
-            entity.AddComponent<SpriteComponent>();
-            entity.AddComponent<TestComponent>();
+            entity.Get().AddComponent<SpriteComponent>();
+            entity.Get().AddComponent<TestComponent>();
 
             AssetPipeline.Serialization.Serialize(entity, "test.fgentity");
         }
 
-        private class TestComponent : Entities.Component
+        private class TestComponent : Component
         {
             public string yesdatahere;
             public string YesMoreDataHere { get; set; }

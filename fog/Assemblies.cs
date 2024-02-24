@@ -1,5 +1,7 @@
-﻿using System;
+﻿using fog.Assets;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 namespace fog
@@ -12,6 +14,15 @@ namespace fog
         private static List<MethodInfo> AfterInitializationCallbacks = new();
         private static List<MethodInfo> AfterStartupEntityLoadCallbacks = new();
         private static List<MethodInfo> BeforeStartupEntityLoadCallbacks = new();
+
+        public static void LoadPlayerAssembly(string contentPath)
+        {
+            var path = AssetPipeline.PrependDataPath(contentPath) + ".dll";
+
+            var content = File.ReadAllBytes(path);
+
+            LoadPlayerAssembly(content);
+        }
 
         public static void LoadPlayerAssembly(byte[] content)
         {
