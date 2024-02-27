@@ -18,3 +18,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("dcb27a62-83bb-4b14-9ef5-3e3c9d08a93f")]
 
 [assembly: InternalsVisibleTo("Game")]
+[assembly: InternalsVisibleTo("Editor")]
