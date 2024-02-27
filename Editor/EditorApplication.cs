@@ -1,5 +1,6 @@
 ﻿using fog;
 using fog.Assets;
+using fog.Memory;
 
 namespace Editor
 {
@@ -19,7 +20,7 @@ namespace Editor
         {
             ProjectPath = path;
 
-            ProjectSettings = new ProjectSettings();
+            ProjectSettings = MemoryManager.Allocate<ProjectSettings>();
             SaveProjectSettings();
 
             EditorSettings = new();
@@ -50,7 +51,7 @@ namespace Editor
             File.WriteAllText(EditorSettingsPath, editorSettingsContent);
         }
 
-        private static void SaveProjectSettings()
+        public static void SaveProjectSettings()
         {
             var projectSettingsContent = AssetPipeline.Serialization.SerializeContent(ProjectSettings);
 

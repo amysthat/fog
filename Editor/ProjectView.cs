@@ -65,6 +65,9 @@
             if (extension == ".fgeditor")
                 return false;
 
+            if (extension == ".fgproject")
+                return false;
+
             return true;
         }
 
@@ -81,6 +84,11 @@
         private void EditItem(string fileName)
         {
 
+        }
+
+        private void openProjectSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new ProjectSettingsView().ShowDialog();
         }
     }
 }

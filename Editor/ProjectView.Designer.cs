@@ -34,13 +34,14 @@
             statusStrip1 = new StatusStrip();
             StatusLabel = new ToolStripStatusLabel();
             FolderView = new ListView();
+            openProjectSettingsToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { reloadProjectDLLToolStripMenuItem, runToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { reloadProjectDLLToolStripMenuItem, openProjectSettingsToolStripMenuItem, runToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(962, 24);
@@ -89,6 +90,13 @@
             FolderView.View = View.List;
             FolderView.MouseDoubleClick += FolderView_MouseDoubleClick;
             // 
+            // openProjectSettingsToolStripMenuItem
+            // 
+            openProjectSettingsToolStripMenuItem.Name = "openProjectSettingsToolStripMenuItem";
+            openProjectSettingsToolStripMenuItem.Size = new Size(133, 20);
+            openProjectSettingsToolStripMenuItem.Text = "Open Project Settings";
+            openProjectSettingsToolStripMenuItem.Click += openProjectSettingsToolStripMenuItem_Click;
+            // 
             // ProjectView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -118,5 +126,6 @@
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel StatusLabel;
         private ListView FolderView;
+        private ToolStripMenuItem openProjectSettingsToolStripMenuItem;
     }
 }
