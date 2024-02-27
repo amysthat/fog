@@ -1,5 +1,6 @@
 ﻿using fog.BuiltinComponents;
 using fog.Entities;
+using fog.Memory;
 using Microsoft.Xna.Framework;
 using System.IO;
 
@@ -11,7 +12,7 @@ namespace fog.Assets
 
         public static void Generate()
         {
-            var settings = new ProjectSettings();
+            var settings = MemoryManager.Allocate<ProjectSettings>();
             AssetPipeline.Serialization.Serialize(settings, ".fgproject");
 
             var entity = World.Add();
@@ -23,9 +24,8 @@ namespace fog.Assets
 
         private class TestComponent : Component
         {
-            public string yesdatahere;
             public string YesMoreDataHere { get; set; }
-            public Vector2 test;
+            public Vector2 TestPos { get; set; }
         }
     }
 }

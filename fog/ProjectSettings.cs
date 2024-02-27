@@ -1,10 +1,10 @@
 ﻿using fog.Assets;
+using fog.Memory;
 using Microsoft.Xna.Framework;
-using YamlDotNet.Core.Tokens;
 
 namespace fog
 {
-    public class ProjectSettings
+    public class ProjectSettings : Object
     {
         public static ProjectSettings Active { get; private set; }
 
