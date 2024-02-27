@@ -1,4 +1,5 @@
 ﻿using fog.Entities;
+using fog.Memory;
 using FontStashSharp;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -40,12 +41,17 @@ namespace fog.Assets
                 if (fileName == ".fgproject")
                     continue;
 
+                var fileExtension = Path.GetExtension(file);
+
+                if (fileExtension == ".fgmeta")
+                    continue;
+
                 var fileNameNoExtension = Path.GetFileNameWithoutExtension(file);
                 rawData.Add(fileNameNoExtension, File.ReadAllBytes(file));
 
                 Logging.Log($"Parsing: {fileName}");
 
-                switch (Path.GetExtension(file))
+                switch (fileExtension)
                 {
                     case ".txt":
                         var txtFile = TxtFile.FromBytes(rawData[fileNameNoExtension]);
@@ -59,10 +65,16 @@ namespace fog.Assets
                     case ".dll": // We do not handle .dll's.
                         break;
                     case ".png":
-                        var stream = new MemoryStream(rawData[fileNameNoExtension]);
-                        var texture = Texture2D.FromStream(fogEngine.Instance.GraphicsDevice, stream);
-                        stream.Dispose();
-                        parsedData.Add(fileNameNoExtension, texture);
+                        Logging.Debug($"file: {file}");
+
+                        if (!HasMetadata(file))
+                        {
+                            Logging.Warning($"Cannot parse {fileName}, no metadata is associated with it!");
+                            continue;
+                        }
+
+                        var metadata = GetMetadata<Sprite>(file, rawData[fileNameNoExtension]);
+                        parsedData.Add(fileNameNoExtension, metadata);
                         break;
                     case ".fgentity":
                         parsedData.Add(fileNameNoExtension, Serialization.Deserialize<Entity>(file));
@@ -94,6 +106,24 @@ namespace fog.Assets
         public static object GetAsset(string name) => parsedData[Path.GetFileNameWithoutExtension(name)];
         public static T GetAsset<T>(string name) => (T)GetAsset(name);
         public static byte[] GetRaw(string name) => rawData[Path.GetFileNameWithoutExtension(name)];
+
+        private static MetadataType GetMetadata<MetadataType>(string file, byte[] data) where MetadataType : Asset
+        {
+            var metadataName = Path.ChangeExtension(file, "fgmeta");
+            var metadataInformation = Serialization.Deserialize<MetadataType>(metadataName);
+            metadataInformation.Load(data);
+
+            return metadataInformation;
+        }
+        private static bool HasMetadata(string file)
+        {
+            var metadataName = Path.ChangeExtension(file, "fgmeta");
+            var exists = File.Exists(metadataName);
+            Logging.Debug("Testing metadata existence: " + metadataName);
+            Logging.Debug("Exists? " + exists);
+
+            return exists;
+        }
 
         internal static string PrependDataPath(string path) => Path.Combine("data", path);
     }
