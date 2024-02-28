@@ -54,7 +54,13 @@ namespace fog.Assets
                 switch (fileExtension)
                 {
                     case ".txt":
-                        var txtFile = TxtFile.FromBytes(rawData[fileNameNoExtension]);
+                        if (!HasMetadata(file))
+                        {
+                            Logging.Warning($"Cannot parse {fileName}, no metadata is associated with it!");
+                            continue;
+                        }
+
+                        var txtFile = GetMetadata<TxtFile>(file, rawData[fileNameNoExtension]);
                         parsedData.Add(fileNameNoExtension, txtFile);
                         break;
                     case ".ttf":
@@ -65,8 +71,6 @@ namespace fog.Assets
                     case ".dll": // We do not handle .dll's.
                         break;
                     case ".png":
-                        Logging.Debug($"file: {file}");
-
                         if (!HasMetadata(file))
                         {
                             Logging.Warning($"Cannot parse {fileName}, no metadata is associated with it!");
@@ -118,11 +122,8 @@ namespace fog.Assets
         private static bool HasMetadata(string file)
         {
             var metadataName = Path.ChangeExtension(file, "fgmeta");
-            var exists = File.Exists(metadataName);
-            Logging.Debug("Testing metadata existence: " + metadataName);
-            Logging.Debug("Exists? " + exists);
 
-            return exists;
+            return File.Exists(metadataName);
         }
 
         internal static string PrependDataPath(string path) => Path.Combine("data", path);

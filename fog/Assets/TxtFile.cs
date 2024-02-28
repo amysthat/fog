@@ -1,21 +1,17 @@
-﻿using fog.Memory;
-using System.Text;
+﻿using System.Text;
 
 namespace fog.Assets
 {
     /// <summary>
     /// Standard text file, imported with UTF-8
     /// </summary>
-    public class TxtFile : Object
+    public class TxtFile : Asset
     {
-        public string text { get; set; }
+        public string Text { get; private set; } = string.Empty;
 
-        public static TxtFile FromBytes(byte[] content)
+        public override void Load(byte[] data)
         {
-            var txtFile = MemoryManager.Allocate<TxtFile>();
-            txtFile.text = Encoding.UTF8.GetString(content);
-
-            return txtFile;
+            Text = Encoding.UTF8.GetString(data);
         }
     }
 }
