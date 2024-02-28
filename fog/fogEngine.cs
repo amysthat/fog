@@ -1,7 +1,6 @@
 ﻿using fog.Assets;
 using fog.Entities;
 using fog.Memory;
-using fog.Rendering;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -69,7 +68,7 @@ namespace fog
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            RuntimeGraphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
+            Graphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
 
             AssetPipeline.LoadAllContent();
 

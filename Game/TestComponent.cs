@@ -1,7 +1,6 @@
 ﻿using fog;
 using fog.BuiltinComponents;
 using fog.Entities;
-using fog.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Vector2 = System.Numerics.Vector2;

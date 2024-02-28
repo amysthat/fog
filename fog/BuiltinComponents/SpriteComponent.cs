@@ -1,7 +1,6 @@
 ﻿using fog.Assets;
 using fog.Entities;
 using fog.Memory;
-using fog.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
