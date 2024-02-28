@@ -38,7 +38,7 @@ namespace fog.Assets
 
             public static T Deserialize<T>(string path)
             {
-                string content = File.ReadAllText(path);
+                string content = AssetDirectory.ReadAllText(path);
                 return DeserializeContent<T>(content);
             }
 

@@ -1,5 +1,8 @@
-﻿namespace fog.Assets
+﻿using System;
+
+namespace fog.Assets
 {
+    [Obsolete]
     public struct AssetRef
     {
         public string Name { get; set; }

@@ -2,6 +2,7 @@
 using fog.Memory;
 using FontStashSharp;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -20,10 +21,10 @@ namespace fog.Assets
 
         internal static void LoadProjectSettings()
         {
-            var filePath = "data/.fgproject";
+            var file = ".fgproject";
 
-            rawData.Add("fgproject", File.ReadAllBytes(filePath));
-            parsedData.Add("fgproject", Serialization.Deserialize<ProjectSettings>(filePath));
+            rawData.Add("fgproject", AssetDirectory.ReadAllBytes(file));
+            ProjectSettings = Serialization.Deserialize<ProjectSettings>(file);
 
             Logging.Log("Loaded project settings.");
         }
@@ -34,11 +35,9 @@ namespace fog.Assets
             var totalSize = 0;
             var unparsedFileCount = 0;
 
-            foreach (var file in Directory.GetFiles("data"))
+            foreach (var file in AssetDirectory.GetFiles())
             {
-                var fileName = Path.GetFileName(file);
-
-                if (fileName == ".fgproject")
+                if (file == ".fgproject")
                     continue;
 
                 var fileExtension = Path.GetExtension(file);
@@ -47,16 +46,16 @@ namespace fog.Assets
                     continue;
 
                 var fileNameNoExtension = Path.GetFileNameWithoutExtension(file);
-                rawData.Add(fileNameNoExtension, File.ReadAllBytes(file));
+                rawData.Add(fileNameNoExtension, AssetDirectory.ReadAllBytes(file));
 
-                Logging.Log($"Parsing: {fileName}");
+                Logging.Log($"Parsing: {file}");
 
                 switch (fileExtension)
                 {
                     case ".txt":
                         if (!HasMetadata(file))
                         {
-                            Logging.Warning($"Cannot parse {fileName}, no metadata is associated with it!");
+                            Logging.Warning($"Cannot parse {file}, no metadata is associated with it!");
                             continue;
                         }
 
@@ -73,7 +72,7 @@ namespace fog.Assets
                     case ".png":
                         if (!HasMetadata(file))
                         {
-                            Logging.Warning($"Cannot parse {fileName}, no metadata is associated with it!");
+                            Logging.Warning($"Cannot parse {file}, no metadata is associated with it!");
                             continue;
                         }
 
@@ -84,7 +83,7 @@ namespace fog.Assets
                         parsedData.Add(fileNameNoExtension, Serialization.Deserialize<Entity>(file));
                         break;
                     default:
-                        Logging.Warning($"Unable to parse \"{fileName}\", unknown file type!");
+                        Logging.Warning($"Unable to parse \"{file}\", unknown file type!");
                         unparsedFileCount++;
                         break;
                 }
@@ -96,6 +95,7 @@ namespace fog.Assets
             Logging.Log($"Initialized. (parsed file count: {fileCount - unparsedFileCount}, unparsed file count: {unparsedFileCount}, total size: {totalSize / 1000} kilobyte(s))");
         }
 
+        [Obsolete]
         public static string GetName(object asset)
         {
             foreach (var pair in parsedData)
@@ -107,8 +107,13 @@ namespace fog.Assets
             return null;
         }
 
+        public static ProjectSettings? ProjectSettings { get; private set; }
+
+        [Obsolete]
         public static object GetAsset(string name) => parsedData[Path.GetFileNameWithoutExtension(name)];
+        [Obsolete]
         public static T GetAsset<T>(string name) => (T)GetAsset(name);
+        [Obsolete]
         public static byte[] GetRaw(string name) => rawData[Path.GetFileNameWithoutExtension(name)];
 
         private static MetadataType GetMetadata<MetadataType>(string file, byte[] data) where MetadataType : Asset
@@ -119,13 +124,12 @@ namespace fog.Assets
 
             return metadataInformation;
         }
+
         private static bool HasMetadata(string file)
         {
             var metadataName = Path.ChangeExtension(file, "fgmeta");
 
-            return File.Exists(metadataName);
+            return AssetDirectory.Exists(metadataName);
         }
-
-        internal static string PrependDataPath(string path) => Path.Combine("data", path);
     }
 }

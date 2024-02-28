@@ -43,6 +43,7 @@ namespace fog
         protected override void Initialize()
         {
             MemoryManager.Initialize();
+            AssetDirectory.Initialize();
 
             if (Generator.ShouldGenerate())
             {
@@ -56,7 +57,7 @@ namespace fog
             AssetPipeline.LoadProjectSettings();
             ProjectSettings.Initialize();
 
-            Assemblies.LoadPlayerAssembly(ProjectSettings.Active.PlayerAssembly);
+            Assemblies.LoadPlayerAssemblyFromProjectSettings();
             Assemblies.RetreiveAllInvocationCallbacks();
 
             Assemblies.CallAllInitializationCallbacks();

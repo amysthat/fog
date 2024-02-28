@@ -1,6 +1,8 @@
 ﻿using fog.Assets;
 using fog.Memory;
 using Microsoft.Xna.Framework;
+using System;
+using Object = fog.Memory.Object;
 
 namespace fog
 {
@@ -36,6 +38,8 @@ namespace fog
         private string _title = "fog Application";
 
         public Color ClearColor { get; set; } = Color.Black;
+
+        [Obsolete("Will be swapped with StartupEntity soon.")]
         public string StartupNode { get; set; } = "";
         public string DefaultFont { get; set; } = "";
         public Color DefaultTextColor { get; set; } = Color.White;
@@ -77,7 +81,7 @@ namespace fog
 
         internal static void Initialize()
         {
-            AssetPipeline.GetAsset<ProjectSettings>("fgproject").MarkActive();
+            AssetPipeline.ProjectSettings!.MarkActive();
         }
     }
 }

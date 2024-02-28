@@ -15,11 +15,18 @@ namespace fog
         private static List<MethodInfo> AfterStartupEntityLoadCallbacks = new();
         private static List<MethodInfo> BeforeStartupEntityLoadCallbacks = new();
 
+        public static void LoadPlayerAssemblyFromProjectSettings()
+        {
+            var content = AssetDirectory.ReadAllBytes(ProjectSettings.Active.PlayerAssembly + ".dll");
+            LoadPlayerAssembly(content);
+        }
+
+        [Obsolete]
         public static void LoadPlayerAssembly(string contentPath)
         {
-            var path = AssetPipeline.PrependDataPath(contentPath) + ".dll";
+            var path = contentPath + ".dll";
 
-            var content = File.ReadAllBytes(path);
+            var content = AssetDirectory.ReadAllBytes(path);
 
             LoadPlayerAssembly(content);
         }
@@ -33,7 +40,7 @@ namespace fog
             }
             catch
             {
-                throw new DllNotFoundException("Could not load player assembly!");
+                throw new Exception("Could not load player assembly!");
             }
         }
 
