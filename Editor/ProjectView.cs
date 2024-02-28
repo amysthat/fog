@@ -1,4 +1,6 @@
-﻿namespace Editor
+﻿using System.Diagnostics;
+
+namespace Editor
 {
     public partial class ProjectView : Form
     {
@@ -45,11 +47,6 @@
 
         private void ProjectView_Shown(object sender, EventArgs e)
         {
-            if (EditorApplication.EditorSettings!.GameProjectPath == string.Empty)
-            {
-                new DllLocator().ShowDialog();
-            }
-
             RefreshList();
         }
 
@@ -89,6 +86,11 @@
         private void openProjectSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new ProjectSettingsView().ShowDialog();
+        }
+
+        private void openCProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CsProject.OpenCsProject(EditorApplication.EditorSettings!.ProjectName);
         }
     }
 }

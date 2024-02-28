@@ -2,6 +2,6 @@
 {
     public class EditorSettings
     {
-        public string GameProjectPath { get; set; } = string.Empty;
+        public string ProjectName { get; set; } = string.Empty;
     }
 }

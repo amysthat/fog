@@ -61,6 +61,29 @@ namespace Editor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+        ///
+        ///  &lt;PropertyGroup&gt;
+        ///    &lt;TargetFramework&gt;net7.0&lt;/TargetFramework&gt;
+        ///    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+        ///    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+        ///  &lt;/PropertyGroup&gt;
+        ///
+        ///  &lt;ItemGroup&gt;
+        ///    &lt;Reference Include=&quot;fog&quot;&gt;
+        ///      &lt;HintPath&gt;fog.dll&lt;/HintPath&gt;
+        ///    &lt;/Reference&gt;
+        ///  &lt;/ItemGroup&gt;
+        ///
+        ///&lt;/Project&gt;.
+        /// </summary>
+        internal static string CSProjContent {
+            get {
+                return ResourceManager.GetString("CSProjContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap GenericItem {

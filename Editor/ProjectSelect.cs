@@ -9,13 +9,13 @@ namespace Editor
 
         private void CreateProjectButton_Click(object sender, EventArgs e)
         {
-            using (var fbd = new FolderBrowserDialog())
+            using (var newProjectView = new CreateProjectView())
             {
-                DialogResult result = fbd.ShowDialog();
+                DialogResult result = newProjectView.ShowDialog();
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                if (result == DialogResult.OK)
                 {
-                    EditorApplication.CreateProject(fbd.SelectedPath);
+                    EditorApplication.CreateProject(newProjectView.ChosenProjectPath!, newProjectView.ChosenProjectName!);
                 }
             }
         }

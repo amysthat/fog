@@ -16,15 +16,22 @@ namespace Editor
         private static string ProjectSettingsPath { get => Path.Combine(ProjectPath!, ".fgproject"); }
         private static string EditorSettingsPath { get => Path.Combine(ProjectPath!, ".fgeditor"); }
 
-        public static void CreateProject(string path)
+        public static void CreateProject(string path, string projectName)
         {
             ProjectPath = path;
 
             ProjectSettings = MemoryManager.Allocate<ProjectSettings>();
+            ProjectSettings.Title = projectName;
+            ProjectSettings.PlayerAssembly = projectName;
             SaveProjectSettings();
 
-            EditorSettings = new();
+            EditorSettings = new()
+            {
+                ProjectName = projectName,
+            };
             SaveEditorSettings();
+
+            CsProject.GenerateCsProject(projectName);
 
             LoadProject(path);
         }
