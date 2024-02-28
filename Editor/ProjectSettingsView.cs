@@ -1,4 +1,6 @@
 ﻿using fog;
+using fog.Entities;
+using fog.Memory;
 using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -24,7 +26,7 @@ namespace Editor
             ClearColorG.Value = projectSettings.ClearColor.G;
             ClearColorB.Value = projectSettings.ClearColor.B;
 
-            StartupEntity.Text = projectSettings.StartupNode;
+            StartupEntity.Text = projectSettings.StartupEntity.GUID.ToString();
 
             DefaultFont.Text = projectSettings.DefaultFont;
 
@@ -56,7 +58,7 @@ namespace Editor
             };
             EditorApplication.ProjectSettings.ClearColor = clearColor;
 
-            EditorApplication.ProjectSettings.StartupNode = StartupEntity.Text;
+            EditorApplication.ProjectSettings.StartupEntity = Reference<Entity>.From(Guid.Parse(StartupEntity.Text));
 
             EditorApplication.ProjectSettings.DefaultFont = DefaultFont.Text;
 

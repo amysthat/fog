@@ -77,10 +77,10 @@ namespace fog
 
             Assemblies.CallAllBeforeStartupEntityLoadCallbacks();
 
-            if (ProjectSettings.Active.StartupNode == "")
+            if (ProjectSettings.Active.StartupEntity.IsNull())
                 Logging.Error("Startup node not set!");
             else
-                World.Add(AssetPipeline.GetAsset<Entity>(ProjectSettings.Active.StartupNode));
+                World.Add(ProjectSettings.Active.StartupEntity);
 
             Assemblies.CallAllAfterStartupEntityLoadCallbacks();
         }

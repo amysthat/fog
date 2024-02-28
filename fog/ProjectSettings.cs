@@ -1,7 +1,9 @@
 ﻿using fog.Assets;
+using fog.Entities;
 using fog.Memory;
 using Microsoft.Xna.Framework;
 using System;
+using System.Text.Json.Serialization;
 using Object = fog.Memory.Object;
 
 namespace fog
@@ -39,11 +41,12 @@ namespace fog
 
         public Color ClearColor { get; set; } = Color.Black;
 
-        [Obsolete("Will be swapped with StartupEntity soon.")]
+        [JsonIgnore, Obsolete("Will be swapped with StartupEntity soon.")]
         public string StartupNode { get; set; } = "";
+        public Reference<Entity> StartupEntity { get; set; } = Reference<Entity>.Null();
         public string DefaultFont { get; set; } = "";
         public Color DefaultTextColor { get; set; } = Color.White;
-        public string PlayerAssembly { get; set; } = "Game.dll";
+        public string PlayerAssembly { get; set; } = "Game";
 
         internal void MarkActive()
         {
