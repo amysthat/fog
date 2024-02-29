@@ -1,10 +1,14 @@
 ﻿using fog.Assets;
+using fog.Entities;
+using fog.Memory;
 using Microsoft.Xna.Framework;
-using YamlDotNet.Core.Tokens;
+using System;
+using System.Text.Json.Serialization;
+using Object = fog.Memory.Object;
 
 namespace fog
 {
-    public class ProjectSettings
+    public class ProjectSettings : Object
     {
         public static ProjectSettings Active { get; private set; }
 
@@ -36,22 +40,22 @@ namespace fog
         private string _title = "fog Application";
 
         public Color ClearColor { get; set; } = Color.Black;
-        public string StartupNode { get; set; } = "";
-        public string DefaultFont { get; set; } = "";
+        public Reference<Entity> StartupEntity { get; set; } = Reference<Entity>.Null();
+        public Reference<Font> DefaultFont { get; set; } = Reference<Font>.Null();
         public Color DefaultTextColor { get; set; } = Color.White;
-        public string PlayerAssembly { get; set; } = "Game.dll";
+        public string PlayerAssembly { get; set; } = "Game";
 
         internal void MarkActive()
         {
             if (Active == this)
             {
-                Logging.Warning(nameof(ProjectSettings), "MarkActive() called more than once.");
+                Logging.Warning("MarkActive() called more than once.");
                 return;
             }
 
             Active = this;
             Apply();
-            Logging.Info(nameof(ProjectSettings), "Initialized.");
+            Logging.Log("Initialized.");
         }
 
         public void Apply()
@@ -65,19 +69,19 @@ namespace fog
             fogEngine.Instance.GraphicsDeviceManager.IsFullScreen = Resolution.Fullscreen;
             fogEngine.Instance.GraphicsDeviceManager.ApplyChanges();
 
-            Logging.Info(nameof(ProjectSettings), $"Resolution set to: {Resolution.Width}x{Resolution.Height}:{Resolution.Fullscreen}, with aspect ratio of: {Resolution.AspectRatio}");
+            Logging.Log($"Resolution set to: {Resolution.Width}x{Resolution.Height}:{Resolution.Fullscreen}, with aspect ratio of: {Resolution.AspectRatio}");
 
             // Title
             fogEngine.Instance.Window.Title = Title;
 
-            Logging.Info(nameof(ProjectSettings), $"Title set to: {Title}");
+            Logging.Log($"Title set to: {Title}");
         }
 
         public ProjectSettings() { }
 
         internal static void Initialize()
         {
-            AssetPipeline.GetAsset<ProjectSettings>("fgproject").MarkActive();
+            AssetPipeline.ProjectSettings!.MarkActive();
         }
     }
 }

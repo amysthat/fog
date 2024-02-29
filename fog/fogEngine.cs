@@ -1,5 +1,6 @@
 ﻿using fog.Assets;
-using fog.Nodes;
+using fog.Entities;
+using fog.Memory;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,7 +23,7 @@ namespace fog
         public static float DeltaTime { get; private set; }
         public static float TotalTime { get; private set; }
 
-        public static FontSystem DefaultFont { get; private set; }
+        public static Reference<Font> DefaultFont { get; private set; }
 
         public fogEngine()
         {
@@ -41,11 +42,25 @@ namespace fog
 
         protected override void Initialize()
         {
-            AssetPipeline.Initialize();
-            ProjectSettings.Initialize();
-            Assemblies.LoadPlayerAssembly(AssetPipeline.GetRaw(ProjectSettings.Active.PlayerAssembly));
+            MemoryManager.Initialize();
+            AssetDirectory.Initialize();
 
-            DefaultFont = AssetPipeline.GetAsset<FontSystem>(ProjectSettings.Active.DefaultFont);
+            if (Generator.ShouldGenerate())
+            {
+                Generator.Generate();
+                Logging.Log("Generated.");
+                Exit();
+                return;
+            }
+
+            AssetPipeline.Initialize();
+            AssetPipeline.LoadProjectSettings();
+            ProjectSettings.Initialize();
+
+            Assemblies.LoadPlayerAssemblyFromProjectSettings();
+            Assemblies.RetreiveAllInvocationCallbacks();
+
+            Assemblies.CallAllInitializationCallbacks();
 
             base.Initialize();
         }
@@ -54,12 +69,20 @@ namespace fog
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            RuntimeGraphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
+            Graphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
 
-            if (ProjectSettings.Active.StartupNode == "")
-                Logging.Error(nameof(fogEngine), "Startup node not set!");
+            AssetPipeline.LoadAllContent();
+
+            DefaultFont = ProjectSettings.Active.DefaultFont;
+
+            Assemblies.CallAllBeforeStartupEntityLoadCallbacks();
+
+            if (ProjectSettings.Active.StartupEntity.IsNull())
+                Logging.Error("Startup entity not set!");
             else
-                World.ImportNode(AssetPipeline.GetAsset<SerializedNode>(ProjectSettings.Active.StartupNode));
+                World.Add(ProjectSettings.Active.StartupEntity);
+
+            Assemblies.CallAllAfterStartupEntityLoadCallbacks();
         }
 
         protected override void Update(GameTime gameTime)
@@ -87,8 +110,8 @@ namespace fog
 
         protected override void OnExiting(object sender, EventArgs args)
         {
-            Logging.Info("fog Engine", "Exit queued.");
-            World.ClearAllNodes();
+            Logging.Log("Exiting...");
+            World.DestroyAllEntities();
         }
 
         public static void Quit()
