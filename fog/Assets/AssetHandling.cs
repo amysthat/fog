@@ -61,6 +61,11 @@ public partial class AssetPipeline
         {
             var extension = Path.GetExtension(file);
 
+            if (extension == ".fgentity")
+            {
+                return true;
+            }
+
             return FileHandlingLookup.Keys.ToList().Contains(extension);
         }
 
