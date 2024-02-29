@@ -1,8 +1,8 @@
 ﻿using fog;
 using fog.Entities;
 using fog.Memory;
-using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
+using Font = fog.Assets.Font;
 
 namespace Editor
 {
@@ -28,7 +28,7 @@ namespace Editor
 
             StartupEntity.Text = projectSettings.StartupEntity.GUID.ToString();
 
-            DefaultFont.Text = projectSettings.DefaultFont;
+            DefaultFont.Text = projectSettings.DefaultFont.GUID.ToString();
 
             DefaultTextColorR.Value = projectSettings.DefaultTextColor.R;
             DefaultTextColorG.Value = projectSettings.DefaultTextColor.G;
@@ -60,7 +60,7 @@ namespace Editor
 
             EditorApplication.ProjectSettings.StartupEntity = Reference<Entity>.From(Guid.Parse(StartupEntity.Text));
 
-            EditorApplication.ProjectSettings.DefaultFont = DefaultFont.Text;
+            EditorApplication.ProjectSettings.DefaultFont = Reference<Font>.From(Guid.Parse(DefaultFont.Text));
 
             var defaultTextColor = new Color
             {
@@ -69,8 +69,6 @@ namespace Editor
                 B = (byte)DefaultTextColorB.Value,
             };
             EditorApplication.ProjectSettings.DefaultTextColor = defaultTextColor;
-
-            EditorApplication.ProjectSettings.PlayerAssembly = PlayerAssembly.Text;
 
             EditorApplication.SaveProjectSettings();
         }

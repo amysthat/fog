@@ -40,11 +40,8 @@ namespace fog
         private string _title = "fog Application";
 
         public Color ClearColor { get; set; } = Color.Black;
-
-        [JsonIgnore, Obsolete("Will be swapped with StartupEntity soon.")]
-        public string StartupNode { get; set; } = "";
         public Reference<Entity> StartupEntity { get; set; } = Reference<Entity>.Null();
-        public string DefaultFont { get; set; } = "";
+        public Reference<Font> DefaultFont { get; set; } = Reference<Font>.Null();
         public Color DefaultTextColor { get; set; } = Color.White;
         public string PlayerAssembly { get; set; } = "Game";
 

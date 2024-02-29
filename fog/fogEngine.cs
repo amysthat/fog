@@ -23,7 +23,7 @@ namespace fog
         public static float DeltaTime { get; private set; }
         public static float TotalTime { get; private set; }
 
-        public static FontSystem DefaultFont { get; private set; }
+        public static Reference<Font> DefaultFont { get; private set; }
 
         public fogEngine()
         {
@@ -73,12 +73,12 @@ namespace fog
 
             AssetPipeline.LoadAllContent();
 
-            DefaultFont = AssetPipeline.GetAsset<FontSystem>(ProjectSettings.Active.DefaultFont);
+            DefaultFont = ProjectSettings.Active.DefaultFont;
 
             Assemblies.CallAllBeforeStartupEntityLoadCallbacks();
 
             if (ProjectSettings.Active.StartupEntity.IsNull())
-                Logging.Error("Startup node not set!");
+                Logging.Error("Startup entity not set!");
             else
                 World.Add(ProjectSettings.Active.StartupEntity);
 

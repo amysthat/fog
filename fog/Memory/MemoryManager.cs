@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using fog.Assets;
 
 namespace fog.Memory;
@@ -46,6 +47,7 @@ public static class MemoryManager
     public static void Remove(Guid guid)
     {
         objects.Remove(guid);
+        Logging.Log($"Removing {guid}.");
     }
 
     public static void Remove(Object @object)

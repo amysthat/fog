@@ -357,19 +357,20 @@
             // 
             // PlayerAssembly
             // 
-            PlayerAssembly.Location = new Point(312, 263);
+            PlayerAssembly.Location = new Point(114, 526);
             PlayerAssembly.Name = "PlayerAssembly";
-            PlayerAssembly.Size = new Size(487, 23);
+            PlayerAssembly.ReadOnly = true;
+            PlayerAssembly.Size = new Size(685, 23);
             PlayerAssembly.TabIndex = 13;
             // 
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(18, 266);
+            label13.Location = new Point(12, 529);
             label13.Name = "label13";
-            label13.Size = new Size(288, 15);
+            label13.Size = new Size(96, 15);
             label13.TabIndex = 12;
-            label13.Text = "Player Assembly (modification is not recommended):";
+            label13.Text = "Player Assembly:";
             // 
             // GUID
             // 

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using fog.Assets;
+using System.Diagnostics;
 
 namespace Editor
 {
@@ -11,34 +12,57 @@ namespace Editor
 
         public void RefreshList()
         {
+            ProjectDirectory.Refresh();
+
             FolderView.SmallImageList = null;
             FolderView.Items.Clear();
 
             var imageList = new ImageList();
+            FolderView.SmallImageList = imageList;
 
-            foreach (var file in Directory.GetFiles(EditorApplication.ProjectPath!))
+            foreach (var file in ProjectDirectory.GetValidItems())
             {
-                if (!ShouldFileBeShown(file))
-                    continue;
-
                 var fileName = Path.GetFileName(file);
 
                 imageList.Images.Add(fileName, Properties.Resources.GenericItem);
-            }
-
-            FolderView.SmallImageList = imageList;
-
-            foreach (var file in Directory.GetFiles(EditorApplication.ProjectPath!))
-            {
-                if (!ShouldFileBeShown(file))
-                    continue;
-
-                var fileName = Path.GetFileName(file);
 
                 var item = new ListViewItem
                 {
                     Text = fileName,
                     ImageKey = fileName,
+                    Tag = ItemStatus.Valid,
+                };
+
+                FolderView.Items.Add(item);
+            }
+
+            foreach (var file in ProjectDirectory.GetUnhandledItems())
+            {
+                var fileName = Path.GetFileName(file);
+
+                imageList.Images.Add(fileName, Properties.Resources.UnhandledItem);
+
+                var item = new ListViewItem
+                {
+                    Text = fileName,
+                    ImageKey = fileName,
+                    Tag = ItemStatus.Unhandled,
+                };
+
+                FolderView.Items.Add(item);
+            }
+
+            foreach (var file in ProjectDirectory.GetInvalidItems())
+            {
+                var fileName = Path.GetFileName(file);
+
+                imageList.Images.Add(fileName, Properties.Resources.InvalidItem);
+
+                var item = new ListViewItem
+                {
+                    Text = fileName,
+                    ImageKey = fileName,
+                    Tag = ItemStatus.Invalid,
                 };
 
                 FolderView.Items.Add(item);
@@ -55,32 +79,29 @@ namespace Editor
             RefreshList();
         }
 
-        private bool ShouldFileBeShown(string fileName)
-        {
-            var extension = Path.GetExtension(fileName);
-
-            if (extension == ".fgeditor")
-                return false;
-
-            if (extension == ".fgproject")
-                return false;
-
-            return true;
-        }
-
         private void FolderView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             var item = FolderView.GetItemAt(e.X, e.Y);
 
             if (item is not null)
             {
-                EditItem(item.Text);
+                EditItem(item.Text, (ItemStatus)item.Tag);
             }
         }
 
-        private void EditItem(string fileName)
+        private void EditItem(string fileName, ItemStatus itemStatus)
         {
+            if (itemStatus == ItemStatus.Unhandled)
+            {
+                MessageBox.Show("This item will not be added to your project because it is currently not supported.", "Unhandled Item", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
+            if (itemStatus == ItemStatus.Invalid)
+            {
+                MessageBox.Show("This item is invalid. Please check its and its metadata's content.", "Invalid Item", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         private void openProjectSettingsToolStripMenuItem_Click(object sender, EventArgs e)

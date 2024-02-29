@@ -17,8 +17,10 @@ namespace fog
 
         public static void DrawText(string text, int fontSize, System.Numerics.Vector2 position, Color? color = null)
         {
-            Color textColor = color.HasValue ? color.Value : ProjectSettings.Active.DefaultTextColor;
-            spriteBatch!.DrawString(fogEngine.DefaultFont.GetFont(fontSize), text, position, textColor);
+            var textColor = color.HasValue ? color.Value : ProjectSettings.Active.DefaultTextColor;
+            var font = fogEngine.DefaultFont.Get();
+
+            spriteBatch!.DrawString(font.GetSize(fontSize), text, position, textColor);
         }
 
         public static void DrawTexture(Texture2D texture, Vector2 position, Color? tint = null, float scale = 1f, bool isFlipped = false, float rotation = 0f)
