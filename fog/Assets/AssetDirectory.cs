@@ -6,9 +6,11 @@ public static class AssetDirectory
 {
     private static string[] files = new string[0];
 
+    internal static string AssetPath = "data";
+
     internal static void Initialize()
     {
-        var actualFiles = Directory.GetFiles("data");
+        var actualFiles = Directory.GetFiles(AssetPath);
         files = new string[actualFiles.Length];
 
         for (int i = 0; i < actualFiles.Length; i++)
@@ -20,15 +22,15 @@ public static class AssetDirectory
     }
 
     /// <param name="file">File name with extension.</param>
-    public static byte[] ReadAllBytes(string file) => File.ReadAllBytes(PrependDataPath(file));
+    public static byte[] ReadAllBytes(string file) => File.ReadAllBytes(PrependAssetPath(file));
 
     /// <param name="file">File name with extension.</param>
-    public static string ReadAllText(string file) => File.ReadAllText(PrependDataPath(file));
+    public static string ReadAllText(string file) => File.ReadAllText(PrependAssetPath(file));
 
     /// <param name="file">File name with extension.</param>
-    public static bool Exists(string file) => File.Exists(PrependDataPath(file));
+    public static bool Exists(string file) => File.Exists(PrependAssetPath(file));
 
     public static string[] GetFiles() => files;
 
-    private static string PrependDataPath(string path) => Path.Combine("data", path);
+    private static string PrependAssetPath(string path) => Path.Combine(AssetPath, path);
 }

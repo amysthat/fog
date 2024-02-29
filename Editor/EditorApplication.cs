@@ -13,8 +13,9 @@ namespace Editor
         public static ProjectSelect? ProjectSelectWindow { get; set; }
         public static ProjectView? ProjectViewWindow { get; set; }
 
-        private static string ProjectSettingsPath { get => Path.Combine(ProjectPath!, ".fgproject"); }
-        private static string EditorSettingsPath { get => Path.Combine(ProjectPath!, ".fgeditor"); }
+        public static string ProjectSettingsPath { get => Path.Combine(ProjectPath!, ".fgproject"); }
+        public static string EditorSettingsPath { get => Path.Combine(ProjectPath!, ".fgeditor"); }
+        public static string AssetPath { get => Path.Combine(ProjectPath!, "assets"); }
 
         public static void CreateProject(string path, string projectName)
         {
@@ -32,6 +33,7 @@ namespace Editor
             SaveEditorSettings();
 
             CsProject.GenerateCsProject(projectName);
+            Directory.CreateDirectory(AssetPath);
 
             LoadProject(path);
         }
@@ -39,6 +41,7 @@ namespace Editor
         public static void LoadProject(string path)
         {
             ProjectPath = path;
+            AssetDirectory.AssetPath = AssetPath;
 
             var editorSettingsContent = File.ReadAllText(EditorSettingsPath);
             EditorSettings = AssetPipeline.Serialization.DeserializeContent<EditorSettings>(editorSettingsContent);

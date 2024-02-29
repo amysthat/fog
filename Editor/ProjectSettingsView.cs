@@ -1,4 +1,5 @@
-﻿using fog;
+﻿using BlueMystic;
+using fog;
 using fog.Entities;
 using fog.Memory;
 using Color = Microsoft.Xna.Framework.Color;
@@ -11,6 +12,7 @@ namespace Editor
         public ProjectSettingsView()
         {
             InitializeComponent();
+            new DarkModeCS(this);
         }
 
         private void ProjectSettingsView_Load(object sender, EventArgs e)

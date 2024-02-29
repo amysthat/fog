@@ -10,6 +10,9 @@ namespace fog.Assets
 
         public override void Load(byte[] data)
         {
+            if (fogEngine.Instance is null)
+                return;
+
             var memoryStream = new MemoryStream(data);
 
             var texture = Texture2D.FromStream(fogEngine.Instance.GraphicsDevice, memoryStream);

@@ -34,12 +34,13 @@
             openCProjectToolStripMenuItem = new ToolStripMenuItem();
             runToolStripMenuItem = new ToolStripMenuItem();
             FolderView = new ListView();
+            openİnFileExplorerToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { reloadProjectDLLToolStripMenuItem, openProjectSettingsToolStripMenuItem, openCProjectToolStripMenuItem, runToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { openİnFileExplorerToolStripMenuItem, reloadProjectDLLToolStripMenuItem, openProjectSettingsToolStripMenuItem, openCProjectToolStripMenuItem, runToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(962, 24);
@@ -87,6 +88,13 @@
             FolderView.View = View.List;
             FolderView.MouseDoubleClick += FolderView_MouseDoubleClick;
             // 
+            // openİnFileExplorerToolStripMenuItem
+            // 
+            openİnFileExplorerToolStripMenuItem.Name = "openİnFileExplorerToolStripMenuItem";
+            openİnFileExplorerToolStripMenuItem.Size = new Size(128, 20);
+            openİnFileExplorerToolStripMenuItem.Text = "Open in File Explorer";
+            openİnFileExplorerToolStripMenuItem.Click += openInFileExplorerToolStripMenuItem_Click;
+            // 
             // ProjectView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -113,5 +121,6 @@
         private ListView FolderView;
         private ToolStripMenuItem openProjectSettingsToolStripMenuItem;
         private ToolStripMenuItem openCProjectToolStripMenuItem;
+        private ToolStripMenuItem openİnFileExplorerToolStripMenuItem;
     }
 }

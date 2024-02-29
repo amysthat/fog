@@ -50,12 +50,26 @@ public partial class AssetPipeline
 
     internal static class AssetHandling
     {
-        public static Dictionary<string, Action<(string file, string assetPipelineFriendlyName, byte[] data)>> FileHandlingLookup = new()
+        public static Dictionary<string, Func<(string file, string assetPipelineFriendlyName, byte[] data), Asset>> FileHandlingLookup = new()
         {
             { ".txt", HandleTxtFile },
             { ".ttf", HandleFontFile },
             { ".png", HandleSpriteFile },
         };
+
+        public static Dictionary<string, Type> FileTypeLookup = new()
+        {
+            { ".txt", typeof(TxtFile) },
+            { ".ttf", typeof(Font) },
+            { ".png", typeof(Sprite) },
+        };
+
+        public static Type GetFileType(string file)
+        {
+            var extension = Path.GetExtension(file);
+
+            return FileTypeLookup[extension];
+        }
 
         public static bool CanFileBeHandled(string file)
         {
@@ -71,32 +85,38 @@ public partial class AssetPipeline
 
         public static void HandleFile(string file)
         {
-            var extension = Path.GetExtension(file);
-
             var assetPipelineFriendlyName = Path.GetFileNameWithoutExtension(file);
             var data = rawData[assetPipelineFriendlyName];
 
+            var asset = ParseFile(file, data);
+
+            parsedData.Add(assetPipelineFriendlyName, asset);
+        }
+
+        internal static Asset ParseFile(string file, byte[] data)
+        {
+            var extension = Path.GetExtension(file);
+
+            var assetPipelineFriendlyName = Path.GetFileNameWithoutExtension(file);
+
             var tuple = (file, assetPipelineFriendlyName, data);
 
-            FileHandlingLookup[extension](tuple);
+            return FileHandlingLookup[extension](tuple);
         }
 
-        private static void HandleTxtFile((string file, string assetPipelineFriendlyName, byte[] data) tuple)
+        private static Asset HandleTxtFile((string file, string assetPipelineFriendlyName, byte[] data) tuple)
         {
-            var txtFile = GetMetadata<TxtFile>(tuple.file, tuple.data);
-            parsedData.Add(tuple.assetPipelineFriendlyName, txtFile);
+            return GetMetadata<TxtFile>(tuple.file, tuple.data);
         }
 
-        private static void HandleFontFile((string file, string assetPipelineFriendlyName, byte[] data) tuple)
+        private static Asset HandleFontFile((string file, string assetPipelineFriendlyName, byte[] data) tuple)
         {
-            var font = GetMetadata<Font>(tuple.file, tuple.data);
-            parsedData.Add(tuple.assetPipelineFriendlyName, font);
+            return GetMetadata<Font>(tuple.file, tuple.data);
         }
 
-        private static void HandleSpriteFile((string file, string assetPipelineFriendlyName, byte[] data) tuple)
+        private static Asset HandleSpriteFile((string file, string assetPipelineFriendlyName, byte[] data) tuple)
         {
-            var metadata = GetMetadata<Sprite>(tuple.file, tuple.data);
-            parsedData.Add(tuple.assetPipelineFriendlyName, metadata);
+            return GetMetadata<Sprite>(tuple.file, tuple.data);
         }
     }
 }

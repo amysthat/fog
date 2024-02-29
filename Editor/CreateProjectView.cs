@@ -1,4 +1,6 @@
-﻿namespace Editor
+﻿using BlueMystic;
+
+namespace Editor
 {
     public partial class CreateProjectView : Form
     {
@@ -8,6 +10,7 @@
         public CreateProjectView()
         {
             InitializeComponent();
+            new DarkModeCS(this);
         }
 
         private void CreateProjectButton_Click(object sender, EventArgs e)

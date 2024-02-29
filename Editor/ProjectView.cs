@@ -1,4 +1,5 @@
-﻿using fog.Assets;
+﻿using BlueMystic;
+using fog.Assets;
 using System.Diagnostics;
 
 namespace Editor
@@ -8,6 +9,7 @@ namespace Editor
         public ProjectView()
         {
             InitializeComponent();
+            new DarkModeCS(this);
         }
 
         public void RefreshList()
@@ -71,6 +73,8 @@ namespace Editor
 
         private void ProjectView_Shown(object sender, EventArgs e)
         {
+            Text = $"fog Project - {EditorApplication.EditorSettings!.ProjectName}";
+
             RefreshList();
         }
 
@@ -99,9 +103,16 @@ namespace Editor
 
             if (itemStatus == ItemStatus.Invalid)
             {
-                MessageBox.Show("This item is invalid. Please check its and its metadata's content.", "Invalid Item", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"This item is invalid. Please check its and its metadata's content.\nException: {ProjectDirectory.GetInvalidException(fileName)}", "Invalid Item", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            var asset = ProjectDirectory.GetAsset(fileName);
+
+            var properties = new ItemPropertiesView();
+            properties.EditingAsset = asset;
+            properties.EditingAssetName = fileName;
+            properties.ShowDialog();
         }
 
         private void openProjectSettingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -112,6 +123,11 @@ namespace Editor
         private void openCProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CsProject.OpenCsProject(EditorApplication.EditorSettings!.ProjectName);
+        }
+
+        private void openInFileExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer", EditorApplication.AssetPath);
         }
     }
 }
