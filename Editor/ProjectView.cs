@@ -1,5 +1,4 @@
 ﻿using BlueMystic;
-using fog.Assets;
 using System.Diagnostics;
 
 namespace Editor
@@ -22,17 +21,17 @@ namespace Editor
             var imageList = new ImageList();
             FolderView.SmallImageList = imageList;
 
-            foreach (var file in ProjectDirectory.GetValidItems())
+            foreach (var file in ProjectDirectory.GetInvalidItems())
             {
                 var fileName = Path.GetFileName(file);
 
-                imageList.Images.Add(fileName, Properties.Resources.GenericItem);
+                imageList.Images.Add(fileName, Properties.Resources.InvalidItem);
 
                 var item = new ListViewItem
                 {
                     Text = fileName,
                     ImageKey = fileName,
-                    Tag = ItemStatus.Valid,
+                    Tag = ItemStatus.Invalid,
                 };
 
                 FolderView.Items.Add(item);
@@ -54,17 +53,17 @@ namespace Editor
                 FolderView.Items.Add(item);
             }
 
-            foreach (var file in ProjectDirectory.GetInvalidItems())
+            foreach (var file in ProjectDirectory.GetValidItems())
             {
                 var fileName = Path.GetFileName(file);
 
-                imageList.Images.Add(fileName, Properties.Resources.InvalidItem);
+                imageList.Images.Add(fileName, Properties.Resources.GenericItem);
 
                 var item = new ListViewItem
                 {
                     Text = fileName,
                     ImageKey = fileName,
-                    Tag = ItemStatus.Invalid,
+                    Tag = ItemStatus.Valid,
                 };
 
                 FolderView.Items.Add(item);
@@ -103,7 +102,7 @@ namespace Editor
 
             if (itemStatus == ItemStatus.Invalid)
             {
-                MessageBox.Show($"This item is invalid. Please check its and its metadata's content.\nException: {ProjectDirectory.GetInvalidException(fileName)}", "Invalid Item", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"This item is invalid. Please check its and its metadata's content.\n{ProjectDirectory.GetInvalidException(fileName)}", "Invalid Item", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

@@ -39,15 +39,21 @@ namespace Editor
                 if (extension == ".fgmeta")
                     continue;
 
+                if (extension == ".fgentity")
+                {
+                    unparsedItems.Add(itemName, new Exception("Entities aren't properly supported."));
+                    invalidItems.Add(itemName);
+                    continue;
+                }
+
+                var hasMetadata = AssetPipeline.HasMetadata(itemName);
                 var canBeHandled = AssetPipeline.AssetHandling.CanFileBeHandled(item);
 
                 if (canBeHandled)
                 {
-                    if (extension == ".fgentity")
+                    if (!hasMetadata)
                     {
-                        unparsedItems.Add(itemName, new Exception("Entities aren't properly supported."));
-                        invalidItems.Add(itemName);
-                        continue;
+                        GenerateMetadata(itemName);
                     }
 
                     try
@@ -68,6 +74,25 @@ namespace Editor
                     unhandledItems.Add(itemName);
                 }
             }
+        }
+
+        public static void SaveAsset(string item, Asset asset)
+        {
+            var content = AssetPipeline.Serialization.SerializeContent(asset);
+            AssetDirectory.WriteAllText(item, content);
+        }
+
+        public static void GenerateMetadata(string item)
+        {
+            var extension = Path.GetExtension(item);
+            var metadataName = Path.ChangeExtension(item, ".fgmeta");
+
+            var type = AssetPipeline.AssetHandling.FileTypeLookup[extension];
+            var generatedAsset = AssetPipeline.GenerateAsset(type);
+            var content = AssetPipeline.Serialization.SerializeContent(generatedAsset);
+            AssetDirectory.WriteAllText(metadataName, content);
+
+            MessageBox.Show($"{item} ({type.FullName}) did not have metadata, and a new one was generated.");
         }
 
         public static IEnumerable<string> GetValidItems() => validItems.AsEnumerable();

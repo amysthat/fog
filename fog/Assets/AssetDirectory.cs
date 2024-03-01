@@ -28,9 +28,15 @@ public static class AssetDirectory
     public static string ReadAllText(string file) => File.ReadAllText(PrependAssetPath(file));
 
     /// <param name="file">File name with extension.</param>
+    public static void WriteAllBytes(string file, byte[] bytes) => File.WriteAllBytes(PrependAssetPath(file), bytes);
+
+    /// <param name="file">File name with extension.</param>
+    public static void WriteAllText(string file, string content) => File.WriteAllText(PrependAssetPath(file), content);
+
+    /// <param name="file">File name with extension.</param>
     public static bool Exists(string file) => File.Exists(PrependAssetPath(file));
 
     public static string[] GetFiles() => files;
 
-    private static string PrependAssetPath(string path) => Path.Combine(AssetPath, path);
+    internal static string PrependAssetPath(string path) => Path.Combine(AssetPath, path);
 }

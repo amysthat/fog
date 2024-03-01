@@ -48,6 +48,29 @@ public partial class AssetPipeline
         }
     }
 
+    internal static Asset GenerateAsset(Type assetType)
+    {
+        var asset = (Asset) Activator.CreateInstance(assetType)!;
+        asset.GUID = Guid.NewGuid();
+        return asset;
+    }
+
+    internal static MetadataType GetMetadata<MetadataType>(string file, byte[] data) where MetadataType : Asset
+    {
+        var metadataName = Path.ChangeExtension(file, "fgmeta");
+        var metadataInformation = Serialization.Deserialize<MetadataType>(metadataName);
+        metadataInformation.Load(data);
+
+        return metadataInformation;
+    }
+
+    internal static bool HasMetadata(string file)
+    {
+        var metadataName = Path.ChangeExtension(file, "fgmeta");
+
+        return AssetDirectory.Exists(metadataName);
+    }
+
     internal static class AssetHandling
     {
         public static Dictionary<string, Func<(string file, string assetPipelineFriendlyName, byte[] data), Asset>> FileHandlingLookup = new()
