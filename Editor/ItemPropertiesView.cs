@@ -6,6 +6,11 @@ namespace Editor
 {
     public partial class ItemPropertiesView : Form
     {
+        private static Dictionary<Type, Type> FieldLookup = new()
+        {
+            { typeof(string), typeof(StringProperty) }
+        };
+
         public Asset? EditingAsset { get; set; }
         public string? EditingAssetName { get; set; }
 
@@ -32,6 +37,33 @@ namespace Editor
         {
             GUIDTextbox.Text = EditingAsset!.GUID.ToString();
             TypeTextbox.Text = EditingAssetType.Name;
+
+            foreach (var property in Property.GetAllProperties(EditingAsset))
+            {
+                if (FieldLookup.TryGetValue(property.PropertyType!, out var fieldType))
+                {
+                    var accessors = EditingAssetType.GetProperty(property.PropertyName)!.GetAccessors();
+
+                    var shouldBeShown = accessors.Length > 1 && (accessors[0].IsPublic &&
+                                                                 accessors[1].IsPublic);
+
+                    if (!shouldBeShown)
+                    {
+                        MessageBox.Show($"{property.PropertyName} ({property.PropertyType!.Name}) will not be shown.");
+                        continue;
+                    }
+
+                    var field = (PropertyField) Activator.CreateInstance(fieldType)!;
+                    PropertyPanel.Controls.Add(field);
+                    field.EditingProperty = property;
+                    field.Location = new Point(0, 0);
+                    field.RefreshProperty();
+                }
+                else
+                {
+                    MessageBox.Show($"Could not find a property field for {property.PropertyName} ({property.PropertyType!.Name})");
+                }
+            }
         }
     }
 }

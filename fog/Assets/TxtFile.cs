@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json.Serialization;
 
 namespace fog.Assets
 {
@@ -7,7 +8,8 @@ namespace fog.Assets
     /// </summary>
     public class TxtFile : Asset
     {
-        public string Text { get; private set; } = string.Empty;
+        [JsonIgnore] public string Text { get; private set; } = string.Empty;
+        public string UselessData { get; set; } = "hi!";
 
         public override void Load(byte[] data)
         {

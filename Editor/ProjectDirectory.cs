@@ -41,7 +41,7 @@ namespace Editor
 
                 if (extension == ".fgentity")
                 {
-                    unparsedItems.Add(itemName, new Exception("Entities aren't properly supported."));
+                    unparsedItems.Add(itemName, new NotImplementedException("Entities aren't properly supported."));
                     invalidItems.Add(itemName);
                     continue;
                 }
