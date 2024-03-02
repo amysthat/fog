@@ -106,6 +106,18 @@ namespace Editor
                 return;
             }
 
+            var isEntity = Path.GetExtension(fileName) == ".fgentity";
+
+            if (isEntity)
+            {
+                var entity = ProjectDirectory.GetEntity(fileName);
+
+                var entityProperties = new EntityForm();
+                entityProperties.EditingEntity = entity;
+                entityProperties.ShowDialog();
+                return;
+            }
+
             var asset = ProjectDirectory.GetAsset(fileName);
 
             var properties = new ItemPropertiesView();
@@ -136,6 +148,11 @@ namespace Editor
         private void openInFileExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("explorer", EditorApplication.AssetPath);
+        }
+
+        private void runToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CsProject.BuildCsProject(EditorApplication.EditorSettings!.ProjectName);
         }
     }
 }

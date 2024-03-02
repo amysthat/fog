@@ -1,9 +1,7 @@
 ﻿using fog;
 using fog.BuiltinComponents;
 using fog.Entities;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Vector2 = System.Numerics.Vector2;
 
 namespace Game
 {
@@ -47,7 +45,7 @@ namespace Game
             Graphics.DrawText("Test text, if you see this, hooraayy!", 20, TextOffset);
             Graphics.DrawText("Delta time: " + fogEngine.DeltaTime, 15, TextOffset + new Vector2(0, 20));
             Graphics.DrawText("Total time: " + fogEngine.TotalTime, 15, TextOffset + new Vector2(0, 35));
-            Graphics.DrawText("Press DEL to crash.", 15, TextOffset + new Vector2(0, 50), Color.Red);
+            Graphics.DrawText("Press DEL to crash.", 15, TextOffset + new Vector2(0, 50), Microsoft.Xna.Framework.Color.Red);
         }
     }
 }

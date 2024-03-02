@@ -25,12 +25,12 @@ public static class CsProject
 
         File.WriteAllText(Path.Combine(csProjectPath, $"{projectName}.csproj"), Properties.Resources.CSProjContent);
 
-        BuildCsProject();
+        BuildCsProject(projectName);
     }
 
-    public static void BuildCsProject()
+    public static void BuildCsProject(string projectName)
     {
-        RunDotNetCommand("cs_project", "build");
+        RunCmdCommand("cs_project", $"title C# Project Build && echo off && cls && dotnet build \"{projectName}.csproj\" && echo Press any key to exit... && pause>nul");
     }
 
     public static void OpenCsProject(string projectName)
@@ -46,12 +46,30 @@ public static class CsProject
         }.Start();
     }
 
+    public static string GetDebugBuildDllPath(string projectName)
+    {
+        return Path.Combine(EditorApplication.ProjectPath!, "cs_project", "bin", "Debug", "net7.0", $"{projectName}.dll");
+    }
+
     private static void RunDotNetCommand(string csProjName, string arguments, bool waitForExit = true)
     {
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.FileName = @"dotnet";
         startInfo.WorkingDirectory = Path.Combine(EditorApplication.ProjectPath!, csProjName);
         startInfo.Arguments = arguments;
+
+        var process = Process.Start(startInfo)!;
+
+        if (waitForExit)
+            process.WaitForExit();
+    }
+
+    private static void RunCmdCommand(string csProjName, string arguments, bool waitForExit = true)
+    {
+        ProcessStartInfo startInfo = new ProcessStartInfo();
+        startInfo.FileName = @"cmd";
+        startInfo.WorkingDirectory = Path.Combine(EditorApplication.ProjectPath!, csProjName);
+        startInfo.Arguments = "/c " + arguments;
 
         var process = Process.Start(startInfo)!;
 

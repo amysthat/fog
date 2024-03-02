@@ -15,12 +15,12 @@ namespace fog
             Logging.Log("Initialized.");
         }
 
-        public static void DrawText(string text, int fontSize, System.Numerics.Vector2 position, Color? color = null)
+        public static void DrawText(string text, int fontSize, Vector2 position, Color? color = null)
         {
             var textColor = color.HasValue ? color.Value : ProjectSettings.Active.DefaultTextColor;
             var font = fogEngine.DefaultFont.Get();
 
-            spriteBatch!.DrawString(font.GetSize(fontSize), text, position, textColor);
+            spriteBatch!.DrawString(font.GetSize(fontSize), text, position.ToXNA(), textColor);
         }
 
         public static void DrawTexture(Texture2D texture, Vector2 position, Color? tint = null, float scale = 1f, bool isFlipped = false, float rotation = 0f)
@@ -29,7 +29,7 @@ namespace fog
             SpriteEffects spriteEffects = isFlipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             spriteBatch!.Draw(texture,
-                             position,
+                             position.ToXNA(),
                              null,
                              color,
                              rotation,

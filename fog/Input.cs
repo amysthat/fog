@@ -97,7 +97,7 @@ namespace fog
                 };
             }
 
-            public static Point Position => state.Position;
+            public static ScreenPoint Position => ScreenPoint.FromXNA(state.Position);
         }
     }
 

@@ -1,5 +1,7 @@
 ﻿using fog.Assets;
+using fog.Entities;
 using fog.Memory;
+using Object = fog.Memory.Object;
 
 namespace Editor
 {
@@ -10,7 +12,7 @@ namespace Editor
         private static List<string> invalidItems = new();
 
         private static Dictionary<string, Exception> unparsedItems = new();
-        private static Dictionary<string, Asset> parsedItems = new();
+        private static Dictionary<string, Object> parsedItems = new();
 
         public static void Refresh()
         {
@@ -41,8 +43,17 @@ namespace Editor
 
                 if (extension == ".fgentity")
                 {
-                    unparsedItems.Add(itemName, new NotImplementedException("Entities aren't properly supported."));
-                    invalidItems.Add(itemName);
+                    try
+                    {
+                        var entity = AssetPipeline.Serialization.Deserialize<Entity>(itemName);
+                        parsedItems.Add(itemName, entity);
+                        validItems.Add(itemName);
+                    }
+                    catch (Exception ex)
+                    {
+                        unparsedItems.Add(itemName, ex);
+                        invalidItems.Add(itemName);
+                    }
                     continue;
                 }
 
@@ -101,7 +112,8 @@ namespace Editor
         public static IEnumerable<string> GetUnhandledItems() => unhandledItems.AsEnumerable();
         public static IEnumerable<string> GetInvalidItems() => invalidItems.AsEnumerable();
 
-        public static Asset GetAsset(string file) => parsedItems[file];
+        public static Entity GetEntity(string file) => (Entity) parsedItems[file];
+        public static Asset GetAsset(string file) => (Asset) parsedItems[file];
         public static Exception GetInvalidException(string file) => unparsedItems[file];
     }
 }

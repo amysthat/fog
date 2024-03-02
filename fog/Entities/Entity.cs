@@ -1,5 +1,4 @@
 ﻿using fog.Memory;
-using Microsoft.Xna.Framework;
 using System;
 using Object = fog.Memory.Object;
 
