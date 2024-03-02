@@ -78,8 +78,10 @@ namespace Editor
 
         public static void SaveAsset(string item, Asset asset)
         {
+            var metadataName = Path.ChangeExtension(item, ".fgmeta");
+
             var content = AssetPipeline.Serialization.SerializeContent(asset);
-            AssetDirectory.WriteAllText(item, content);
+            AssetDirectory.WriteAllText(metadataName, content);
         }
 
         public static void GenerateMetadata(string item)

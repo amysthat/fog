@@ -32,7 +32,6 @@
             GUIDTextbox = new TextBox();
             TypeTextbox = new TextBox();
             label2 = new Label();
-            ApplyButton = new Button();
             OpenDefaultApplication = new Button();
             groupBox1 = new GroupBox();
             PropertyPanel = new Panel();
@@ -75,23 +74,12 @@
             label2.TabIndex = 2;
             label2.Text = "Type:";
             // 
-            // ApplyButton
-            // 
-            ApplyButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            ApplyButton.Enabled = false;
-            ApplyButton.Location = new Point(444, 532);
-            ApplyButton.Name = "ApplyButton";
-            ApplyButton.Size = new Size(104, 23);
-            ApplyButton.TabIndex = 4;
-            ApplyButton.Text = "Apply";
-            ApplyButton.UseVisualStyleBackColor = true;
-            // 
             // OpenDefaultApplication
             // 
             OpenDefaultApplication.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             OpenDefaultApplication.Location = new Point(12, 532);
             OpenDefaultApplication.Name = "OpenDefaultApplication";
-            OpenDefaultApplication.Size = new Size(217, 23);
+            OpenDefaultApplication.Size = new Size(533, 23);
             OpenDefaultApplication.TabIndex = 5;
             OpenDefaultApplication.Text = "Open with default application";
             OpenDefaultApplication.UseVisualStyleBackColor = true;
@@ -122,7 +110,6 @@
             ClientSize = new Size(560, 567);
             Controls.Add(groupBox1);
             Controls.Add(OpenDefaultApplication);
-            Controls.Add(ApplyButton);
             Controls.Add(TypeTextbox);
             Controls.Add(label2);
             Controls.Add(GUIDTextbox);
@@ -145,7 +132,6 @@
         private TextBox GUIDTextbox;
         private TextBox TypeTextbox;
         private Label label2;
-        private Button ApplyButton;
         private Button OpenDefaultApplication;
         private GroupBox groupBox1;
         private Panel PropertyPanel;

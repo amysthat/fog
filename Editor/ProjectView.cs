@@ -112,6 +112,15 @@ namespace Editor
             properties.EditingAsset = asset;
             properties.EditingAssetName = fileName;
             properties.ShowDialog();
+
+            try
+            {
+                ProjectDirectory.SaveAsset(fileName, asset);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"There was a problem saving {fileName} ({asset.GetType().Name}).\n{ex}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void openProjectSettingsToolStripMenuItem_Click(object sender, EventArgs e)

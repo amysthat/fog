@@ -38,8 +38,17 @@ namespace Editor
             GUIDTextbox.Text = EditingAsset!.GUID.ToString();
             TypeTextbox.Text = EditingAssetType.Name;
 
-            foreach (var property in Property.GetAllProperties(EditingAsset))
+            var shownPropertyCount = 0;
+            var hiddenPropertyCount = 0;
+            var properties = Property.GetAllProperties(EditingAsset);
+
+            int currentY = 0;
+
+            foreach (var property in properties)
             {
+                if (property.PropertyName == "GUID")
+                    continue;
+
                 if (FieldLookup.TryGetValue(property.PropertyType!, out var fieldType))
                 {
                     var accessors = EditingAssetType.GetProperty(property.PropertyName)!.GetAccessors();
@@ -49,21 +58,27 @@ namespace Editor
 
                     if (!shouldBeShown)
                     {
-                        MessageBox.Show($"{property.PropertyName} ({property.PropertyType!.Name}) will not be shown.");
+                        hiddenPropertyCount++;
                         continue;
                     }
 
-                    var field = (PropertyField) Activator.CreateInstance(fieldType)!;
+                    var field = (PropertyField)Activator.CreateInstance(fieldType)!;
                     PropertyPanel.Controls.Add(field);
                     field.EditingProperty = property;
-                    field.Location = new Point(0, 0);
+                    field.Location = new Point(0, currentY);
                     field.RefreshProperty();
+
+                    currentY += 40;
+                    shownPropertyCount++;
                 }
                 else
                 {
+                    hiddenPropertyCount++;
                     MessageBox.Show($"Could not find a property field for {property.PropertyName} ({property.PropertyType!.Name})");
                 }
             }
+
+            groupBox1.Text = $"Exposed Properties ({shownPropertyCount}:{hiddenPropertyCount})";
         }
     }
 }

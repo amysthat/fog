@@ -28,10 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            EditBox = new TextBox();
+            PropertyEditPanel.SuspendLayout();
+            SuspendLayout();
+            // 
+            // PropertyEditPanel
+            // 
+            PropertyEditPanel.Controls.Add(EditBox);
+            PropertyEditPanel.Controls.SetChildIndex(EditBox, 0);
+            // 
+            // EditBox
+            // 
+            EditBox.Location = new Point(0, 4);
+            EditBox.Name = "EditBox";
+            EditBox.Size = new Size(342, 23);
+            EditBox.TabIndex = 2;
+            EditBox.TextChanged += EditBox_TextChanged;
+            // 
+            // StringProperty
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Name = "StringProperty";
+            PropertyEditPanel.ResumeLayout(false);
+            PropertyEditPanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private TextBox EditBox;
     }
 }
