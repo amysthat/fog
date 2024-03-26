@@ -1,14 +1,10 @@
 ﻿using fog.Assets;
-using fog.Entities;
-using fog.Memory;
 using Microsoft.Xna.Framework;
-using System;
-using System.Text.Json.Serialization;
-using Object = fog.Memory.Object;
+using YamlDotNet.Core.Tokens;
 
 namespace fog
 {
-    public class ProjectSettings : Object
+    public class ProjectSettings
     {
         public static ProjectSettings Active { get; private set; }
 
@@ -40,22 +36,22 @@ namespace fog
         private string _title = "fog Application";
 
         public Color ClearColor { get; set; } = Color.Black;
-        public Reference<Entity> StartupEntity { get; set; } = Reference<Entity>.Null();
-        public Reference<Font> DefaultFont { get; set; } = Reference<Font>.Null();
+        public string StartupNode { get; set; } = "";
+        public string DefaultFont { get; set; } = "";
         public Color DefaultTextColor { get; set; } = Color.White;
-        public string PlayerAssembly { get; set; } = "Game";
+        public string PlayerAssembly { get; set; } = "Game.dll";
 
         internal void MarkActive()
         {
             if (Active == this)
             {
-                Logging.Warning("MarkActive() called more than once.");
+                Logging.Warning(nameof(ProjectSettings), "MarkActive() called more than once.");
                 return;
             }
 
             Active = this;
             Apply();
-            Logging.Log("Initialized.");
+            Logging.Info(nameof(ProjectSettings), "Initialized.");
         }
 
         public void Apply()
@@ -64,24 +60,24 @@ namespace fog
                 return;
 
             // Resolution
-            fogEngine.Instance.GraphicsDeviceManager.PreferredBackBufferWidth = Resolution.Width;
-            fogEngine.Instance.GraphicsDeviceManager.PreferredBackBufferHeight = Resolution.Height;
-            fogEngine.Instance.GraphicsDeviceManager.IsFullScreen = Resolution.Fullscreen;
-            fogEngine.Instance.GraphicsDeviceManager.ApplyChanges();
+            fog.Instance.GraphicsDeviceManager.PreferredBackBufferWidth = Resolution.Width;
+            fog.Instance.GraphicsDeviceManager.PreferredBackBufferHeight = Resolution.Height;
+            fog.Instance.GraphicsDeviceManager.IsFullScreen = Resolution.Fullscreen;
+            fog.Instance.GraphicsDeviceManager.ApplyChanges();
 
-            Logging.Log($"Resolution set to: {Resolution.Width}x{Resolution.Height}:{Resolution.Fullscreen}, with aspect ratio of: {Resolution.AspectRatio}");
+            Logging.Info(nameof(ProjectSettings), $"Resolution set to: {Resolution.Width}x{Resolution.Height}:{Resolution.Fullscreen}, with aspect ratio of: {Resolution.AspectRatio}");
 
             // Title
-            fogEngine.Instance.Window.Title = Title;
+            fog.Instance.Window.Title = Title;
 
-            Logging.Log($"Title set to: {Title}");
+            Logging.Info(nameof(ProjectSettings), $"Title set to: {Title}");
         }
 
         public ProjectSettings() { }
 
         internal static void Initialize()
         {
-            AssetPipeline.ProjectSettings!.MarkActive();
+            AssetPipeline.GetAsset<ProjectSettings>("fgproject").MarkActive();
         }
     }
 }

@@ -1,19 +1,20 @@
 ﻿using System.Text;
-using System.Text.Json.Serialization;
 
 namespace fog.Assets
 {
     /// <summary>
     /// Standard text file, imported with UTF-8
     /// </summary>
-    public class TxtFile : Asset
+    public class TxtFile
     {
-        [JsonIgnore] public string Text { get; private set; } = string.Empty;
-        public string UselessData { get; set; } = "hi!";
+        public string text { get; set; }
 
-        public override void Load(byte[] data)
+        public static TxtFile FromBytes(byte[] content)
         {
-            Text = Encoding.UTF8.GetString(data);
+            return new TxtFile
+            {
+                text = Encoding.UTF8.GetString(content),
+            };
         }
     }
 }

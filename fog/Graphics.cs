@@ -1,42 +1,60 @@
-﻿using FontStashSharp;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace fog
 {
+    /// <summary>
+    /// Combines both game and editor graphics calls into a single class.
+    /// </summary>
     public static class Graphics
     {
-        private static SpriteBatch? spriteBatch;
+        public delegate void DrawStringEventHandler(DrawStringEventArgs args);
+        public delegate void DrawTextureEventHandler(DrawTextureEventArgs args);
 
-        public static void Initialize(SpriteBatch _spriteBatch)
+        public static event DrawStringEventHandler DrawStringEvent;
+        public static event DrawTextureEventHandler DrawTextureEvent;
+
+        public static void DrawText(string text, int fontSize, System.Numerics.Vector2 position, Color? color = null)
         {
-            spriteBatch = _spriteBatch;
-
-            Logging.Log("Initialized.");
-        }
-
-        public static void DrawText(string text, int fontSize, Vector2 position, Color? color = null)
-        {
-            var textColor = color.HasValue ? color.Value : ProjectSettings.Active.DefaultTextColor;
-            var font = fogEngine.DefaultFont.Get();
-
-            spriteBatch!.DrawString(font.GetSize(fontSize), text, position.ToXNA(), textColor);
+            DrawStringEvent.Invoke(new DrawStringEventArgs
+            {
+                Text = text,
+                FontSize = fontSize,
+                Position = position,
+                Color = color
+            });
         }
 
         public static void DrawTexture(Texture2D texture, Vector2 position, Color? tint = null, float scale = 1f, bool isFlipped = false, float rotation = 0f)
         {
-            Color color = tint.HasValue ? tint.Value : Color.White;
-            SpriteEffects spriteEffects = isFlipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            DrawTextureEvent.Invoke(new DrawTextureEventArgs
+            {
+                Texture = texture,
+                Position = position,
+                Tint = tint,
+                Scale = scale,
+                IsFlipped = isFlipped,
+                Rotation = rotation,
+            });
+        }
 
-            spriteBatch!.Draw(texture,
-                             position.ToXNA(),
-                             null,
-                             color,
-                             rotation,
-                             texture.Bounds.Center.ToVector2(),
-                             scale,
-                             spriteEffects,
-                             0);
+        public class DrawStringEventArgs : EventArgs
+        {
+            public string Text { get; set; }
+            public int FontSize { get; set; }
+            public System.Numerics.Vector2 Position { get; set; }
+            public Color? Color { get; set; }
+        }
+
+        public class DrawTextureEventArgs : EventArgs
+        {
+            public Texture2D Texture { get; set; }
+            public Vector2 Position { get; set; }
+            public Color? Tint { get; set; }
+            public float Scale { get; set; }
+            public bool IsFlipped { get; set; }
+            public float Rotation { get; set; }
         }
     }
 }
