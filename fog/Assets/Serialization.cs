@@ -19,12 +19,6 @@ namespace fog.Assets
                 return options;
             }
 
-            public static void Serialize(object thing, string fileName)
-            {
-                var data = SerializeContent(thing);
-                File.WriteAllText(Path.Combine("data", fileName), data);
-            }
-
             public static string SerializeContent(object thing)
             {
                 var content = JsonSerializer.Serialize(thing, GetOptions());

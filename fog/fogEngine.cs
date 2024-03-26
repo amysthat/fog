@@ -45,14 +45,6 @@ namespace fog
             MemoryManager.Initialize();
             AssetDirectory.Initialize();
 
-            if (Generator.ShouldGenerate())
-            {
-                Generator.Generate();
-                Logging.Log("Generated.");
-                Exit();
-                return;
-            }
-
             AssetPipeline.Initialize();
             AssetPipeline.LoadProjectSettings();
             ProjectSettings.Initialize();

@@ -49,6 +49,9 @@ namespace Editor
             var projectSettingsContent = File.ReadAllText(ProjectSettingsPath);
             ProjectSettings = AssetPipeline.Serialization.DeserializeContent<ProjectSettings>(projectSettingsContent);
 
+            var dllContent = File.ReadAllBytes(CsProject.GetDebugBuildDllPath(EditorSettings.ProjectName));
+            Assemblies.LoadPlayerAssembly(dllContent);
+
             ProjectViewWindow = new();
             ProjectViewWindow.Show();
             ProjectSelectWindow?.Close();

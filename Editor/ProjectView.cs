@@ -1,5 +1,4 @@
 ﻿using BlueMystic;
-using fog.Assets;
 using System.Diagnostics;
 
 namespace Editor
@@ -22,17 +21,17 @@ namespace Editor
             var imageList = new ImageList();
             FolderView.SmallImageList = imageList;
 
-            foreach (var file in ProjectDirectory.GetValidItems())
+            foreach (var file in ProjectDirectory.GetInvalidItems())
             {
                 var fileName = Path.GetFileName(file);
 
-                imageList.Images.Add(fileName, Properties.Resources.GenericItem);
+                imageList.Images.Add(fileName, Properties.Resources.InvalidItem);
 
                 var item = new ListViewItem
                 {
                     Text = fileName,
                     ImageKey = fileName,
-                    Tag = ItemStatus.Valid,
+                    Tag = ItemStatus.Invalid,
                 };
 
                 FolderView.Items.Add(item);
@@ -54,17 +53,17 @@ namespace Editor
                 FolderView.Items.Add(item);
             }
 
-            foreach (var file in ProjectDirectory.GetInvalidItems())
+            foreach (var file in ProjectDirectory.GetValidItems())
             {
                 var fileName = Path.GetFileName(file);
 
-                imageList.Images.Add(fileName, Properties.Resources.InvalidItem);
+                imageList.Images.Add(fileName, Properties.Resources.GenericItem);
 
                 var item = new ListViewItem
                 {
                     Text = fileName,
                     ImageKey = fileName,
-                    Tag = ItemStatus.Invalid,
+                    Tag = ItemStatus.Valid,
                 };
 
                 FolderView.Items.Add(item);
@@ -103,7 +102,19 @@ namespace Editor
 
             if (itemStatus == ItemStatus.Invalid)
             {
-                MessageBox.Show($"This item is invalid. Please check its and its metadata's content.\nException: {ProjectDirectory.GetInvalidException(fileName)}", "Invalid Item", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"This item is invalid. Please check its and its metadata's content.\n{ProjectDirectory.GetInvalidException(fileName)}", "Invalid Item", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var isEntity = Path.GetExtension(fileName) == ".fgentity";
+
+            if (isEntity)
+            {
+                var entity = ProjectDirectory.GetEntity(fileName);
+
+                var entityProperties = new EntityForm();
+                entityProperties.EditingEntity = entity;
+                entityProperties.ShowDialog();
                 return;
             }
 
@@ -113,6 +124,15 @@ namespace Editor
             properties.EditingAsset = asset;
             properties.EditingAssetName = fileName;
             properties.ShowDialog();
+
+            try
+            {
+                ProjectDirectory.SaveAsset(fileName, asset);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"There was a problem saving {fileName} ({asset.GetType().Name}).\n{ex}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void openProjectSettingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -128,6 +148,11 @@ namespace Editor
         private void openInFileExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("explorer", EditorApplication.AssetPath);
+        }
+
+        private void runToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CsProject.BuildCsProject(EditorApplication.EditorSettings!.ProjectName);
         }
     }
 }

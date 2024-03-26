@@ -21,16 +21,6 @@ namespace fog
             LoadPlayerAssembly(content);
         }
 
-        [Obsolete]
-        public static void LoadPlayerAssembly(string contentPath)
-        {
-            var path = contentPath + ".dll";
-
-            var content = AssetDirectory.ReadAllBytes(path);
-
-            LoadPlayerAssembly(content);
-        }
-
         public static void LoadPlayerAssembly(byte[] content)
         {
             try

@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             menuStrip1 = new MenuStrip();
+            openİnFileExplorerToolStripMenuItem = new ToolStripMenuItem();
             reloadProjectDLLToolStripMenuItem = new ToolStripMenuItem();
             openProjectSettingsToolStripMenuItem = new ToolStripMenuItem();
             openCProjectToolStripMenuItem = new ToolStripMenuItem();
             runToolStripMenuItem = new ToolStripMenuItem();
             FolderView = new ListView();
-            openİnFileExplorerToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -46,6 +46,13 @@
             menuStrip1.Size = new Size(962, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
+            // 
+            // openİnFileExplorerToolStripMenuItem
+            // 
+            openİnFileExplorerToolStripMenuItem.Name = "openİnFileExplorerToolStripMenuItem";
+            openİnFileExplorerToolStripMenuItem.Size = new Size(128, 20);
+            openİnFileExplorerToolStripMenuItem.Text = "Open in File Explorer";
+            openİnFileExplorerToolStripMenuItem.Click += openInFileExplorerToolStripMenuItem_Click;
             // 
             // reloadProjectDLLToolStripMenuItem
             // 
@@ -73,6 +80,7 @@
             runToolStripMenuItem.Name = "runToolStripMenuItem";
             runToolStripMenuItem.Size = new Size(40, 20);
             runToolStripMenuItem.Text = "Run";
+            runToolStripMenuItem.Click += runToolStripMenuItem_Click;
             // 
             // FolderView
             // 
@@ -87,13 +95,6 @@
             FolderView.UseCompatibleStateImageBehavior = false;
             FolderView.View = View.List;
             FolderView.MouseDoubleClick += FolderView_MouseDoubleClick;
-            // 
-            // openİnFileExplorerToolStripMenuItem
-            // 
-            openİnFileExplorerToolStripMenuItem.Name = "openİnFileExplorerToolStripMenuItem";
-            openİnFileExplorerToolStripMenuItem.Size = new Size(128, 20);
-            openİnFileExplorerToolStripMenuItem.Text = "Open in File Explorer";
-            openİnFileExplorerToolStripMenuItem.Click += openInFileExplorerToolStripMenuItem_Click;
             // 
             // ProjectView
             // 

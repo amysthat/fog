@@ -40,21 +40,5 @@ namespace fog.Assets
 
             Logging.Log($"Initialized.");
         }
-
-        private static MetadataType GetMetadata<MetadataType>(string file, byte[] data) where MetadataType : Asset
-        {
-            var metadataName = Path.ChangeExtension(file, "fgmeta");
-            var metadataInformation = Serialization.Deserialize<MetadataType>(metadataName);
-            metadataInformation.Load(data);
-
-            return metadataInformation;
-        }
-
-        private static bool HasMetadata(string file)
-        {
-            var metadataName = Path.ChangeExtension(file, "fgmeta");
-
-            return AssetDirectory.Exists(metadataName);
-        }
     }
 }

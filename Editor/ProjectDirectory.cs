@@ -1,5 +1,7 @@
 ﻿using fog.Assets;
+using fog.Entities;
 using fog.Memory;
+using Object = fog.Memory.Object;
 
 namespace Editor
 {
@@ -10,7 +12,7 @@ namespace Editor
         private static List<string> invalidItems = new();
 
         private static Dictionary<string, Exception> unparsedItems = new();
-        private static Dictionary<string, Asset> parsedItems = new();
+        private static Dictionary<string, Object> parsedItems = new();
 
         public static void Refresh()
         {
@@ -39,15 +41,30 @@ namespace Editor
                 if (extension == ".fgmeta")
                     continue;
 
+                if (extension == ".fgentity")
+                {
+                    try
+                    {
+                        var entity = AssetPipeline.Serialization.Deserialize<Entity>(itemName);
+                        parsedItems.Add(itemName, entity);
+                        validItems.Add(itemName);
+                    }
+                    catch (Exception ex)
+                    {
+                        unparsedItems.Add(itemName, ex);
+                        invalidItems.Add(itemName);
+                    }
+                    continue;
+                }
+
+                var hasMetadata = AssetPipeline.HasMetadata(itemName);
                 var canBeHandled = AssetPipeline.AssetHandling.CanFileBeHandled(item);
 
                 if (canBeHandled)
                 {
-                    if (extension == ".fgentity")
+                    if (!hasMetadata)
                     {
-                        unparsedItems.Add(itemName, new Exception("Entities aren't properly supported."));
-                        invalidItems.Add(itemName);
-                        continue;
+                        GenerateMetadata(itemName);
                     }
 
                     try
@@ -70,11 +87,33 @@ namespace Editor
             }
         }
 
+        public static void SaveAsset(string item, Asset asset)
+        {
+            var metadataName = Path.ChangeExtension(item, ".fgmeta");
+
+            var content = AssetPipeline.Serialization.SerializeContent(asset);
+            AssetDirectory.WriteAllText(metadataName, content);
+        }
+
+        public static void GenerateMetadata(string item)
+        {
+            var extension = Path.GetExtension(item);
+            var metadataName = Path.ChangeExtension(item, ".fgmeta");
+
+            var type = AssetPipeline.AssetHandling.FileTypeLookup[extension];
+            var generatedAsset = AssetPipeline.GenerateAsset(type);
+            var content = AssetPipeline.Serialization.SerializeContent(generatedAsset);
+            AssetDirectory.WriteAllText(metadataName, content);
+
+            MessageBox.Show($"{item} ({type.FullName}) did not have metadata, and a new one was generated.");
+        }
+
         public static IEnumerable<string> GetValidItems() => validItems.AsEnumerable();
         public static IEnumerable<string> GetUnhandledItems() => unhandledItems.AsEnumerable();
         public static IEnumerable<string> GetInvalidItems() => invalidItems.AsEnumerable();
 
-        public static Asset GetAsset(string file) => parsedItems[file];
+        public static Entity GetEntity(string file) => (Entity) parsedItems[file];
+        public static Asset GetAsset(string file) => (Asset) parsedItems[file];
         public static Exception GetInvalidException(string file) => unparsedItems[file];
     }
 }
