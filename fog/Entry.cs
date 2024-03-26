@@ -1,5 +1,7 @@
-﻿using System;
+﻿#if RELEASE
+using System;
 using System.IO;
+#endif
 
 namespace fog
 {
@@ -7,16 +9,18 @@ namespace fog
     {
         public static void Run()
         {
+#if RELEASE
             try
             {
-                using var game = new fogEngine();
-                game.Run();
+#endif
+            using var game = new fog();
+            game.Run();
+#if RELEASE
             }
             catch (Exception ex)
             {
-                Logging.Error(ex.ToString());
+                Logging.Error("Crash Detection", ex.ToString());
 
-#if RELEASE
                 if (!Directory.Exists("crashes"))
                     Directory.CreateDirectory("crashes");
 
@@ -26,10 +30,8 @@ namespace fog
 
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.ReadKey(true);
-#elif DEBUG
-                throw;
-#endif
             }
+#endif
         }
     }
 }

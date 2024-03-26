@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using YamlDotNet.Serialization;
 
 namespace fog
 {
@@ -8,6 +8,6 @@ namespace fog
         public int Height { get; set; }
         public bool Fullscreen { get; set; }
 
-        [JsonIgnore] public readonly float AspectRatio => (float)Height / Width;
+        [YamlIgnore] public readonly float AspectRatio => (float)Height / Width;
     }
 }

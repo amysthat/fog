@@ -1,18 +1,16 @@
 ﻿using fog.Assets;
-using fog.Entities;
-using fog.Memory;
+using fog.Nodes;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace fog
 {
 #pragma warning disable IDE1006 // Naming Styles
-    public class fogEngine : Game
+    public class fog : Game
 #pragma warning restore IDE1006 // Naming Styles
     {
-        internal static fogEngine Instance { get; private set; }
+        internal static fog Instance { get; private set; }
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -23,9 +21,9 @@ namespace fog
         public static float DeltaTime { get; private set; }
         public static float TotalTime { get; private set; }
 
-        public static Reference<Font> DefaultFont { get; private set; }
+        public static FontSystem DefaultFont { get; private set; }
 
-        public fogEngine()
+        public fog()
         {
             if (Instance is not null)
             {
@@ -42,17 +40,11 @@ namespace fog
 
         protected override void Initialize()
         {
-            MemoryManager.Initialize();
-            AssetDirectory.Initialize();
-
             AssetPipeline.Initialize();
-            AssetPipeline.LoadProjectSettings();
             ProjectSettings.Initialize();
+            Assemblies.LoadPlayerAssembly(AssetPipeline.GetRaw(ProjectSettings.Active.PlayerAssembly));
 
-            Assemblies.LoadPlayerAssemblyFromProjectSettings();
-            Assemblies.RetreiveAllInvocationCallbacks();
-
-            Assemblies.CallAllInitializationCallbacks();
+            DefaultFont = AssetPipeline.GetAsset<FontSystem>(ProjectSettings.Active.DefaultFont);
 
             base.Initialize();
         }
@@ -61,28 +53,18 @@ namespace fog
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Graphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
+            RuntimeGraphics.Initialize(_spriteBatch); // This feels off. Initializing in LoadContent() shouldn't be a thing, but spriteBatch is initialized here?
 
-            AssetPipeline.LoadAllContent();
-
-            DefaultFont = ProjectSettings.Active.DefaultFont;
-
-            Assemblies.CallAllBeforeStartupEntityLoadCallbacks();
-
-            if (ProjectSettings.Active.StartupEntity.IsNull())
-                Logging.Error("Startup entity not set!");
+            if (ProjectSettings.Active.StartupNode == "")
+                Logging.Error(nameof(fog), "Startup node not set!");
             else
-                World.Add(ProjectSettings.Active.StartupEntity);
-
-            Assemblies.CallAllAfterStartupEntityLoadCallbacks();
+                World.ImportNode(AssetPipeline.GetAsset<SerializedNode>(ProjectSettings.Active.StartupNode));
         }
 
         protected override void Update(GameTime gameTime)
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TotalTime = (float)gameTime.TotalGameTime.TotalSeconds;
-
-            Input.Update();
 
             World.Update();
 
@@ -98,17 +80,6 @@ namespace fog
             _spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        protected override void OnExiting(object sender, EventArgs args)
-        {
-            Logging.Log("Exiting...");
-            World.DestroyAllEntities();
-        }
-
-        public static void Quit()
-        {
-            Instance.Exit();
         }
     }
 }
